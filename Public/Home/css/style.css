@@ -1,0 +1,74 @@
+*{margin:0;padding: 0;font-family: "微软雅黑";}
+.fr{float: right;}
+.fl{float: left;}
+li{list-style: none;}
+.panel-primary>.panel-heading{overflow: hidden;}
+body{background: #fff;}
+.centerImg{display: block;margin:0 auto;}
+#collapseListGroup1  .list-group-item{padding: 0;}
+#collapseListGroup1 .list-group-item a{display: block;padding: 10px 15px;color:#000;}
+.introduce{font-size: 15px;color: #000;text-indent:25px;line-height: 25px;padding: 10px 0;box-sizing: border-box;width: 100%;overflow: scroll;}
+.noPadding {
+   padding: 0;
+}
+.logoImg{width: 58px;}
+a:active{text-decoration: none;}
+.bodyColor{background-color: #efeff4;}
+.mynavbar{
+ background-color: #fff;
+}
+.navbar-default .navbar-nav>li>a{color: #000;font-size: 15px;}
+.userInfo{color:#000;font-size: 15px;margin-left: 10px}
+.tab {
+    padding: 0 0 30px 0;
+    background: #fff;
+    height: 80px;
+    margin-bottom: 0;
+}
+.tab>li {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+.tab .btn-primary{margin-left: 0px;margin-right: 20px}
+.mui-bar-nav{box-shadow: none;-webkit-box-shadow: none; background: #337ab7;}
+    .mui-title,.mui-icon-left-nav {color: #fff;}
+.mui-icon-arrowleft,.mui-title,.mui-bar .mui-btn-nav.mui-pull-left{color:#fff;}
+.mui-input-row label{font-size: 16px;font-weight: normal;}
+.mui-btn-block {
+    width: 80%;
+    margin: 20px auto;
+    padding: 8px 0;
+    background: #337ab7;
+    color: #fff;
+    font-family: "微软雅黑";
+}
+.mui-input-group{background: transparent;}
+.mui-input-group .mui-input-row{background: #fff;}
+.flex{display: flex;background: #fff;border-bottom: 1px solid #eee;margin-bottom: 0;}
+.flex>li{flex:1;height: 35px;line-height: 35px;text-align: center;}
+.flex .time{color: #999;font-size: 12px;}
+.codeiMG{width: 80%;display: block;margin:0 auto;}
+.codeTIP{text-align: center;height: 50px;line-height: 50px;font-size: 14px;}
+.panel-body{word-wrap:break-word;
+word-break:break-all;}
+video{display: block;width: 96%;margin:20px auto;}
+#login ::-webkit-input-placeholder { /* WebKit browsers */
+    color: #fff;
+}
+.logoI{width: 50%;margin:10px auto 10px;}
+    #login ::-webkit-input-placeholder { /* WebKit browsers */
+    color: #fff;
+    }
+    .showcode{color: #fff;text-align: center;}
+.forgetPwd{text-align: center;line-height: 20px;font-size: 14px;color: #000;margin-top: 20px;}
+.grid{overflow: hidden;background: #fff;}
+.grid>li{width: 31%;float: left;text-align: center;border:1px solid #d4d2d2;border-radius: .1rem;margin-left: 2%;margin-bottom: 10px;}
+.grid>li img{width: 48%;}
+.grid>li .gridText{font-size: 15px;text-align: center;color: #333;}
+.iconImgDiv{text-align: center;height:58px;line-height: 58px;}
+#myGRid{margin-top: 30px}
+#myGRid a {
+    padding: 10px 10px;
+}
+.nav>li>a{  padding: 10px 10px; }
