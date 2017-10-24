@@ -20,6 +20,26 @@ class IndexController extends CommonController {
 		$this->display();
 	}
 
+    //列表
+    public function shop(){
+        $article =M('product');
+        $intro= $article->order('id DESC')->where(array('type'=>1))->select();
+        $this->assign('intro',$intro);
+        $this->display();
+    }
+
+    //详情
+    public function detail(){
+        $article =M('product');
+        $intro= $article->where(array('id'=>$_GET['id']))->find();
+        if($_POST['num']){
+            print_r($_POST);die;
+        }
+        $this->assign('intro',$intro);
+        $this->display();
+    }
+
+
     /**
      * 公司简介
      */
@@ -83,11 +103,7 @@ class IndexController extends CommonController {
 		$this->display();
 	}
 
-	public function share(){
-	    $url = "http://www.898tj.com"."/index.php/Home/Login/reg/fid/".session('uid').".html";
-	    $this->assign('url',$url);
-        $this->display();
-    }
+
 
     public function K(){
         $rite =M("rite")->order("id desc")->limit(7)->select();

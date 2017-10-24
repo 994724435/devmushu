@@ -1,161 +1,226 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <title>个人中心</title>
-        <link href="__ROOT__/Public/Home/css/bootstrap.min.css" rel="stylesheet">
-        <link href="__ROOT__/Public/Home/css/aui.min.css" rel="stylesheet">
-        <link href="__ROOT__/Public/Home/css/mui.picker.css" rel="stylesheet">
-        <link href="__ROOT__/Public/Home/css/mui.poppicker.css" rel="stylesheet">
-        <link href="__ROOT__/Public/Home/css/style.css" rel="stylesheet">
-         <script type="text/javascript" src="__ROOT__/Public/Home/js/jquery-3.1.1.min.js"></script>
-         <script type="text/javascript" src="__ROOT__/Public/Home/js/aui.js"></script>
-        <script type="text/javascript" src="__ROOT__/Public/Home/js/mui.picker.js"></script>
-        <script type="text/javascript" src="__ROOT__/Public/Home/js/mui.poppicker.js"></script>
-        <script type="text/javascript" src="__ROOT__/Public/Home/js/bootstrap.min.js"></script>
-        <style>
-            .mui-content{background: #fff;}
-        </style>
-    </head>
-    <body>
-        <!-- 公共头部 -->
-        <include file="Common/header" />
-    <!-- 公共头部 -->
-          <div class="container-fluid noPadding">
-            <div class="mui-content">
-            <ul class="tab">
-              <li>
-                <ul>
-                  <li>动态钱包</li>
-                  <li>{$username.dongbag}</li>
-                  <li><button type="button" class="btn btn-primary btn-xs" onclick="location.href='__ROOT__/index.php/Home/User/transfer/type/1'">转账</button>
-                  <button type="button" class="btn btn-default btn-xs" onclick="location.href='tixian_dong.html'">提现</button></li>
-                </ul>
-              </li>
-              <li>
-                <ul>
-                  <li>静态钱包</li>
-                  <li>{$username.jingbag}</li>
-                  <li><button type="button" class="btn btn-primary btn-xs" onclick="location.href='__ROOT__/index.php/Home/User/transfer/type/2'">转账</button>
-                  <button type="button" class="btn btn-default btn-xs" onclick="location.href='tixian_jing.html'">提现</button></li>
-                </ul>
-              </li>
-              <li>
-              </li>
-            </ul>
-                <!--<ul class="mui-table-view">-->
-                  <!--<li class="mui-table-view-cell">-->
-                       <!--充值钱包-->
-                       <!--<span class="fr">余额：{$username.chargebag}</span>-->
-                  <!--</li>-->
-                  <!--<li class="mui-table-view-cell">-->
-                     <!--<a class="mui-navigate-right" href="recharge.html">-->
-                       <!--积分充值-->
-                       <!--</a>-->
-                  <!--</li>-->
-                  <!--<li class="mui-table-view-cell">-->
-                     <!--<a class="mui-navigate-right" href="my_data.html">-->
-                       <!--个人资料-->
-                       <!--</a>-->
-                  <!--</li>-->
-                    <!--<li class="mui-table-view-cell">-->
-                      <!--<a class="mui-navigate-right" href="washan_data.html">-->
-                        <!--资料完善-->
-                      <!--</a>-->
-                    <!--</li>-->
-                    <!--<li class="mui-table-view-cell">-->
-                      <!--<a class="mui-navigate-right" href="buyMit.html">-->
-                        <!--买入MIF币-->
-                      <!--</a>-->
-                    <!--</li>-->
-                   <!---->
-                  <!--<li class="mui-table-view-cell">-->
-                      <!--<a class="mui-navigate-right" href="jingtai.html">-->
-                        <!--静态收益-->
-                      <!--</a>-->
-                    <!--</li>-->
-                     <!--<li class="mui-table-view-cell">-->
-                      <!--<a class="mui-navigate-right" href="dongtai.html">-->
-                        <!--动态收益-->
-                      <!--</a>-->
-                    <!--</li>-->
-                    <!--<li class="mui-table-view-cell">-->
-                      <!--<a class="mui-navigate-right" href="my_gruop.html">-->
-                         <!--我的团队-->
-                      <!--</a>-->
-                    <!--</li>-->
-                    <!--<li class="mui-table-view-cell">-->
-                      <!--<a class="mui-navigate-right" href="kefu.html">-->
-                        <!--在线客服-->
-                      <!--</a>-->
-                    <!--</li>-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="__ROOT__/Public/Home/css/aui.min.css">
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/Home/css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="__ROOT__/Public/Home/css/style.css">
+    <script type="text/javascript" src="__ROOT__/Public/Home/js/swiper.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/Home/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/Home/js/aui.js"></script>
+    <style type="text/css">
+        body{padding-bottom: 50px;}
+        .photo{width: 60px;height: 60px;border-radius: 50%;vertical-align: initial;margin: 0 15px;float: left;position: relative;top: 20px;}
+        .title{background: #04cbd9;padding: 20px 0 30px 0;overflow: hidden;position: relative}
+        .loginout{position: absolute;width: 24px;right: 10px;top: 20px;}
+        .info{display: inline-block;font-size: 14px;color: #fff;line-height: 25px;float: left;}
+        .tab{padding: 15px 0;background: #fff;height: 80px}
+        .tel{font-size: 14px;}
+        .tab>li{width: 33.3%;float: left;text-align: center;font-size: 15px;}
+        .tab>li ul{line-height: 25px;}
+        .tab>li ul>li:last-child{font-size: 17px;color: #ff0125;}
+        .tab>li ul>li:last-child span{font-size: 14px;}
+        .grid{overflow: hidden;}
+        .grid>li{width: 33.3%;float: left;background: #fff;border:1px solid #ddd;}
+        .grid>li img{width: 43%;}
+        .grid>li li:first-child{height: 60px;padding-top: 10px;text-align: center;}
+        .grid>li li:last-child{font-size: 14px;text-align: center;height: 30px;line-height: 30px;}
+    </style>
+</head>
+<body>
+<div class="title">
+    <img src="__ROOT__/Public/Home/img/p_14.png" alt="" class="photo">
+    <ul class="info">
+        <li>用户名：<span class="tel">1722776633333</span></li>
+        <li>会员等级：<span class="tel">黄金用户</span></li>
+        <li>推荐人：<span class="tel">1722776633333</span></li>
+        <li>物流状态：<span class="tel">未发货</span></li>
+    </ul>
+    <img src="__ROOT__/Public/Home/img/p_15.png" alt="" class="loginout">
+</div>
+<ul class="tab">
+    <li>
+        <ul>
+            <li>当前分股数</li>
+            <li>1<span>(股)</span></li>
+        </ul>
+    </li>
+    <li>
+        <ul>
+            <li>我的复投码</li>
+            <li>21<span>(个)</span></li>
+        </ul>
+    </li>
+    <li>
+        <ul>
+            <li>积分金额</li>
+            <li>21<span>(元)</span></li>
+        </ul>
+    </li>
+</ul>
+<ul class="grid">
+    <li data-href="__ROOT__/index.php/Home/User/notice.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_16.png" alt="">
+            </li>
+            <li>
+                公司公告
+            </li>
+        </ul>
+    </li>
+    <li data-href="popularize.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_17.png" alt="">
+            </li>
+            <li>
+                我要推广
+            </li>
+        </ul>
+    </li>
+    <li data-href="deal.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_18.png" alt="">
+            </li>
+            <li>
+                交易大厅
+            </li>
+        </ul>
+    </li>
+    <li data-href="width_draw.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_5.png" alt="">
+            </li>
+            <li>
+                积分提现
+            </li>
+        </ul>
+    </li>
+    <li data-href="my_data.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_3.png" alt="">
+            </li>
+            <li>
+                个人资料
+            </li>
+        </ul>
+    </li>
+    <li data-href="complete.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_10.png" alt="">
+            </li>
+            <li>
+                资料完善
+            </li>
+        </ul>
+    </li>
+    <li data-href="transfer.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_9.png" alt="">
+            </li>
+            <li>
+                转账交易
+            </li>
+        </ul>
+    </li>
+    <li data-href="my_group.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_6.png" alt="">
+            </li>
+            <li>
+                我的下级
+            </li>
+        </ul>
+    </li>
+    <li data-href="reg.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_8.png" alt="">
+            </li>
+            <li>
+                注册下级
+            </li>
+        </ul>
+    </li>
+    <li data-href="sy_jing.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_4.png" alt="">
+            </li>
+            <li>
+                静态收益明细
+            </li>
+        </ul>
+    </li>
+    <li data-href="sy_dong.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_2.png" alt="">
+            </li>
+            <li>
+                动态收益明细
+            </li>
+        </ul>
+    </li>
+    <li data-href="futou.html">
+        <ul>
+            <li>
+                <img src="__ROOT__/Public/Home/img/p_7.png" alt="">
+            </li>
+            <li>
+                我要复投
+            </li>
+        </ul>
+    </li>
 
-                <!--</ul>-->
-                <ul class="nav grid" id="myGRid">
-                    <li>
-                        <a href="__ROOT__/index.php/Home/Index/choose.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_12.jpg" alt="" class="iconImg" style="width: 46%;"></div>
-                            <div class="gridText">积分充值</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_22.png" alt="" class="iconImg" style="width: 46%;"></div>
-                            <div class="gridText" style="font-size: 12px;">充值钱包:{$username.chargebag}</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="my_data.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_8.png" alt="" class="iconImg"></div>
-                            <div class="gridText">个人资料</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="washan_data.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_18.png" alt="" class="iconImg"></div>
-                            <div class="gridText">资料完善</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="buyMit.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_11.jpg" alt="" class="iconImg"></div>
-                            <div class="gridText">买入MIF币</div>
-                        </a>
-                    </li>
+</ul>
+<nav class="mui-bar mui-bar-tab">
+    <a class="mui-tab-item" data-href="__ROOT__/index.php/Home/Index/index.html">
+        <span class="mui-icon"><img src="__ROOT__/Public/Home/img/7.png" alt=""></span>
+        <span class="mui-tab-label">首页</span>
+    </a>
+    <a class="mui-tab-item mui-active" data-href="__ROOT__/index.php/Home/User/my.html">
+        <span class="mui-icon"><img src="__ROOT__/Public/Home/img/10.png" alt=""></span>
+        <span class="mui-tab-label">个人中心</span>
+    </a>
+</nav>
+<script type="text/javascript">
+    $(function(){
+        mui("nav").on("tap","a",function(){
+            var href=$(this).attr('data-href');
+            if(href){
+                window.location.href=href;
+            }
+        });
 
-                    <li>
-                        <a href="jingtai.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_13.jpg" alt="" class="iconImg"></div>
-                            <div class="gridText">静态收益</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dongtai.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_4.png" alt="" class="iconImg"></div>
-                            <div class="gridText">动态收益</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="my_gruop.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_17.jpg" alt="" class="iconImg"></div>
-                            <div class="gridText">我的团队</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="kefu.html">
-                            <div class="iconImgDiv"><img src="__ROOT__/Public/Home/images/mif/p_14.png" alt="" class="iconImg"></div>
-                            <div class="gridText">在线客服</div>
-                        </a>
-                    </li>
-                </ul>
-              </div>
-            </div>
-       
-        <script>
-        
-        </script>
-    </body>
 
+        $(".grid li").click(function() {
+            var href=$(this).attr('data-href');
+            window.location.href=href;
+        });
+
+        $(".loginout").click(function() {
+            var btnArray = ['否', '是'];
+            mui.confirm('确定要退出登录？', '提示', btnArray, function(e) {
+                if (e.index == 1) {
+                    console.log("确定退出");
+                } else {
+                    console.log("取消退出");
+                }
+            })
+        });
+    })
+</script>
+</body>
 </html>

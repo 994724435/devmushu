@@ -5,6 +5,24 @@ use Think\Controller;
 header('content-type:text/html;charset=utf-8');
 class UserController extends CommonController{
 
+    public function popularize(){
+        $url = "http://www.898tj.com"."/index.php/Home/Login/reg/fid/".session('uid').".html";
+        $this->assign('url',$url);
+        $this->display();
+    }
+
+    public function notice_detail(){
+        $article = M('article')->where(array('aid'=>$_GET['id']))->find();
+        $this->assign('res',$article);
+        $this->display();
+    }
+
+    public function notice(){
+        $article = M('article')->select();
+        $this->assign('res',$article);
+        $this->display();
+    }
+
     public function my(){
         $this->display();
     }
@@ -90,12 +108,12 @@ class UserController extends CommonController{
     /*
     * 完善资料
      */
-    public function washan_data(){
+    public function complete(){
         if($_POST['pwd'] && $_POST['pwd2'] ){
             $data = $_POST;
             M("menber")->where(array('uid'=>session('uid')))->save($data);
             echo "<script>";
-            echo "window.location.href='".__ROOT__."/index.php/Home/User/washan_data';";
+            echo "window.location.href='".__ROOT__."/index.php/Home/User/complete';";
             echo "</script>";
             exit;
         }
@@ -153,7 +171,7 @@ class UserController extends CommonController{
     /*
     * 静态   1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7退本 8静态转账 9动态转账 10静态收益 11 动态收益
      */
-    public function jingtai(){
+    public function sy_jing(){
         $incomelog =M('incomelog');
         $con['userid'] = session('uid');
         $con['type']   =array('in',array(3,8,10));
@@ -166,7 +184,7 @@ class UserController extends CommonController{
     /*
     * 动态
      */
-    public function dongtai(){
+    public function sy_dong(){
         $incomelog =M('incomelog');
         $con['userid'] = session('uid');
         $con['type']   =array('in',array(4,9,11));
@@ -383,7 +401,7 @@ class UserController extends CommonController{
     /*
     * 我的团队
      */
-    public function my_gruop(){
+    public function my_group(){
         $menber = M("menber");
         $p_incomelog =M('incomelog');
         $con['userid'] = session('uid');

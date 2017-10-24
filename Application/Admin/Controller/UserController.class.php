@@ -17,7 +17,7 @@ class UserController extends Controller {
         $object->png($url, false, $errorCorrectionLevel, $matrixPointSize, 2);
     }
 
-	public function syncLoginForAdmin(){
+	public function login(){
         if(IS_POST){
             $name = I('post.name');
             $pwd = I('post.pwd');
