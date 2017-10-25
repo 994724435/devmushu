@@ -5,7 +5,7 @@ class CommonController extends Controller {
 	public function _initialize(){
 		$function = explode('/',__ACTION__);
 		$curfunction =$function[count($function)-1];
-		session('uid',1);
+//		session('uid',1);
 		if(!session('uid')){
 			echo "<script>alert('请登录');";
 			echo "window.location.href='".__ROOT__."/index.php/Home/Login/login';";

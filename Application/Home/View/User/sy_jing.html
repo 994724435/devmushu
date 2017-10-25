@@ -21,13 +21,15 @@
 	<div class="mui-content">
 	    <table class="my_group_table">
 	    	<tr>
-	    		<th>收益金额</th>
+	    		<th>收益明细</th>
+				<th>收益金额</th>
 	    		<th>收益时间</th>
 	    	</tr>
 
 			<foreach name="res" item='v'>
 	    	<tr>
-	    		<td>{$v.income}</td>
+	    		<td>{$v.reson}</td>
+				<th>{$v.income}</th>
 	    		<td><?php echo date('Y-m-d H:i:s',$v['addtime']);?></td>
 	    	</tr>
 			</foreach>

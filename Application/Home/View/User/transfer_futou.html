@@ -19,25 +19,25 @@
 	  <h1 class="mui-title">复投码转账</h1>
 	</header>
 	<div class="mui-content">
-        <form class="mui-input-group">
-		    <div class="mui-input-row">
-		        <label>目标账号</label>
-		        <input type="text" class="mui-input-clear" placeholder="请输入目标账号">
-		    </div>
-		    <div class="mui-input-row">
-		        <label>目标姓名</label>
-		        <input type="text" class="mui-input-clear" placeholder="请输入目标姓名">
-		    </div>
-		     <div class="mui-input-row">
-		        <label>转账数量</label>
-		        <input type="number" class="mui-input-clear" placeholder="请输入转账数量">
-		    </div>
-		    <div class="mui-input-row">
-		        <label>二级密码</label>
-		        <input type="password" class="mui-input-password" placeholder="请输入二级密码">
-		    </div>
-			<button class="mui-btn mui-btn-block">确认转账</button>
-		</form>		
+		<form class="mui-input-group" method="post"  enctype="multipart/form-data">
+			<div class="mui-input-row">
+				<label>目标账号</label>
+				<input type="text" name="tel" class="mui-input-clear" placeholder="请输入目标账号">
+			</div>
+			<div class="mui-input-row">
+				<label>目标姓名</label>
+				<input type="text" name="name" class="mui-input-clear" placeholder="请输入目标姓名">
+			</div>
+			<div class="mui-input-row">
+				<label>转账数量</label>
+				<input type="number" name="num" class="mui-input-clear" placeholder="请输入转账数量">
+			</div>
+			<div class="mui-input-row">
+				<label>二级密码</label>
+				<input type="password" name="pwd2" class="mui-input-password" placeholder="请输入二级密码">
+			</div>
+			<button type="submit" class="mui-btn mui-btn-block">确认转账</button>
+		</form>
 	</div>
 </body>
 </html>

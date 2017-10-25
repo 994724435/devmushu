@@ -20,24 +20,24 @@
 	</header>
 	<div class="mui-content">
 	    <p class="tipTitle">转账需手续费10%</p>
-        <form class="mui-input-group">
+        <form class="mui-input-group" method="post"  enctype="multipart/form-data">
 		    <div class="mui-input-row">
 		        <label>目标账号</label>
-		        <input type="text" class="mui-input-clear" placeholder="请输入目标账号">
+		        <input type="text" name="tel" class="mui-input-clear" placeholder="请输入目标账号">
 		    </div>
 		    <div class="mui-input-row">
 		        <label>目标姓名</label>
-		        <input type="text" class="mui-input-clear" placeholder="请输入目标姓名">
+		        <input type="text" name="name" class="mui-input-clear" placeholder="请输入目标姓名">
 		    </div>
 		     <div class="mui-input-row">
 		        <label>转账数量</label>
-		        <input type="number" class="mui-input-clear" placeholder="请输入转账数量">
+		        <input type="number" name="num" class="mui-input-clear" placeholder="请输入转账数量">
 		    </div>
 		    <div class="mui-input-row">
 		        <label>二级密码</label>
-		        <input type="password" class="mui-input-password" placeholder="请输入二级密码">
+		        <input type="password" name="pwd2" class="mui-input-password" placeholder="请输入二级密码">
 		    </div>
-			<button class="mui-btn mui-btn-block">确认转账</button>
+			<button type="submit" class="mui-btn mui-btn-block">确认转账</button>
 		</form>		
 	</div>
 </body>

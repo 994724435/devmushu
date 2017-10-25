@@ -34,7 +34,7 @@ class UserController extends CommonController{
             $res_user =$menber->where(array('tel'=>$_POST['tel']))->select();
             if($res_user[0]){
                 echo "<script>alert('用户名已存在');";
-                if($_POST['num'] == 100){
+                if((int)$_POST['num'] == 100){
                     echo "window.location.href='".__ROOT__."/index.php/Home/User/reg100';";
                 }else{
                     echo "window.location.href='".__ROOT__."/index.php/Home/User/reg200';";
@@ -44,21 +44,51 @@ class UserController extends CommonController{
             }
             //  金额
             $res_menber =$menber->where(array('uid'=>session('uid')))->select();
-
+            $chargebag = bcsub($res_menber[0]['chargebag'],$_POST['num'],2);
+            if($res_menber[0]['chargebag'] < $_POST['num']){
+                echo "<script>alert('积分不足');";
+                if((int)$_POST['num'] == 100){
+                    echo "window.location.href='".__ROOT__."/index.php/Home/User/reg100';";
+                }else{
+                    echo "window.location.href='".__ROOT__."/index.php/Home/User/reg200';";
+                }
+                echo "</script>";
+                exit;
+            }
+            $menber->where(array('uid'=>session('uid')))->save(array('chargebag'=>$chargebag));
             $data['name'] =$_POST['name'];
             $data['tel'] =$_POST['tel'];
             $data['pwd'] =$_POST['pwd'];
             $data['pwd2'] =$_POST['pwd2'];
-            $data['type'] =0;
+            $data['type'] =1;
             $data['fuid'] =session('uid');
-            $data['addtime'] =date('Y-m-d H:i:s',time());
+            $data['addtime'] =time();
             $data['addymd'] = date('Y-m-d',time());
             $data['chargebag'] =0 ;
+            if($_POST['num'] ==100){
+                $data['dongbag'] =1 ;
+            }else{
+                $data['dongbag'] =2 ;
+            }
 
             $res =$menber->add($data);
+
+            $income =M('incomelog');
+            $data['type'] =5;
+            $data['state'] =2;
+            $data['reson'] ='注册下级';
+            $data['addymd'] =date('Y-m-d',time());
+            $data['addtime'] =time();
+            $data['orderid'] =$res;
+            $data['userid'] =session('uid');
+            $data['income'] =$_POST['num'];
+            if($_POST['num'] > 0){
+                $income->add($data);
+            }
+
             if($res){
                 //更新 uids
-                if($res_menber[0]['fuid']){
+                if($res_menber[0]['fuids']){
                     $fuids = $menber->where(array('uid'=>$res))->find();
                     if($fuids['fuids']){
                         $fuids = $fuids['fuids'].session('uid').",";
@@ -82,21 +112,26 @@ class UserController extends CommonController{
                 //下家金额记录
                 $data1['state'] = 1;
                 $data1['reson'] = "注册收入";
+                $data1['type'] = 1;
                 if($_POST['num'] ==100){
-                    $data1['type'] = 1;
+                    $nums = 1;
                 }else{
-                    $data1['type'] = 2;
+                    $nums =2;
                 }
 
                 $data1['addymd'] = date('Y-m-d',time());
-                $data1['addtime'] = date('Y-m-d H:i:s',time());
+                $data1['addtime'] = time();
                 $data1['orderid'] = session('uid');     // 注册上家
                 $data1['userid'] =$res;
-                $data1['income'] = $_POST['num'];
+                $data1['income'] = $nums;
                 $this->savelog($data1);
             }
             echo "<script>alert('用户".$_POST['name']."注册成功');";
-            echo "window.location.href='".__ROOT__."/index.php/Home/User/regNext';";
+            if((int)$_POST['num'] == 100){
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/my';";
+            }else{
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/my';";
+            }
             echo "</script>";
             exit;
 
@@ -287,12 +322,12 @@ class UserController extends CommonController{
 
 
     /*
-    * 静态   1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7退本 8静态转账 9动态转账 10静态收益 11 动态收益
+    * 静态   1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10静态收益 11 动态收益
      */
     public function sy_jing(){
         $incomelog =M('incomelog');
         $con['userid'] = session('uid');
-        $con['type']   =array('in',array(3,8,10));
+        $con['type']   =array('in',array(3,5,8,9,10));
 //        $con['state']   =array('in',array(1,2));
         $res = $incomelog->where($con)->order(" id DESC ")->limit(18)->select();
         $this->assign('res',$res);
@@ -314,8 +349,6 @@ class UserController extends CommonController{
     
     public function futou(){
 
-        $config =M("config")->where(array('id'=>1))->select();
-        $bi =$config[0]['value'];
         if($_POST['num'] > 0){
             if(!is_numeric($_POST['num'])){
                 echo "<script>alert('请不要输入非法字符');";
@@ -325,7 +358,15 @@ class UserController extends CommonController{
             }
             $menber = M("menber");
             $userinfo = $menber->where(array('uid'=>session('uid')))->select();
-            $needmoney =bcmul($_POST['num'],$bi);
+            $needmoney =bcmul($_POST['num'],100);
+
+
+            if($userinfo[0]['mif'] < $_POST['num']){
+                echo "<script>alert('复投码不足');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/my';";
+                echo "</script>";
+                exit;
+            }
 
             $userallmoney =$userinfo[0]['chargebag'];
             if($userallmoney < $needmoney){
@@ -335,31 +376,32 @@ class UserController extends CommonController{
                 exit;
             }else{
                $left = bcsub($userinfo[0]['chargebag'] , $needmoney,2);
+               $mif = bcsub ($userinfo[0]['mif'] , $_POST['num']);
+
                if($left >= 0 ){
-                   $menber->where(array('uid'=>session('uid')))->save(array('chargebag'=>$left));
+                   $menber->where(array('uid'=>session('uid')))->save(array('chargebag'=>$left,'mif'=>$mif));
                }else{
                    echo "<script>alert('积分不足');";
                    echo "window.location.href='".__ROOT__."/index.php/Home/User/my';";
                    echo "</script>";
                    exit;
                }
-                // MIF 增加
-                $mif = $userinfo[0]['mif'] + $_POST['num'];
-                $menber->where(array('uid'=>session('uid')))->save(array('mif'=>$mif));
+                // 增加
+                $mif = $userinfo[0]['dongbag'] + $_POST['num'];
+                $menber->where(array('uid'=>session('uid')))->save(array('dongbag'=>$mif));
                 $income =M('incomelog');
                 $data['type'] =6;
                 $data['state'] =2;
-                $data['reson'] ='下单购买';
+                $data['reson'] ='复投';
                 $data['addymd'] =date('Y-m-d',time());
                 $data['addtime'] =time();
                 $data['orderid'] =session('uid');
                 $data['userid'] =session('uid');
                 $data['income'] =$needmoney;
-
                 if($needmoney > 0){
                     $income->add($data);
                 }
-                $resreson ="购买成功";
+
 
                 $order['userid'] =session('uid');
                 $order['productid'] =1 ;
@@ -374,55 +416,6 @@ class UserController extends CommonController{
                 $order['totals'] =$needmoney;
                 if($_POST['num'] > 0){
                     M("orderlog")->add($order);
-                }
-
-                // 上家收益  tu do
-
-                if($userinfo[0]['fuid']){
-                    // 查询多少人
-                    $fuids =array_reverse(explode(',',$userinfo[0]['fuids'])) ;
-                    $configobj = M('config');
-                    foreach ($fuids as $key=>$val){
-                           if($key==2){ // 一级
-                              $lilv = $configobj->where(array('id'=>3))->select();
-                           } elseif ($key == 3){ // 二
-                               $lilv = $configobj->where(array('id'=>4))->select();
-                           }elseif ($key == 4){ // 三
-                               $lilv = $configobj->where(array('id'=>5))->select();
-                           }elseif ($key == 5){ // 四
-                               $lilv = $configobj->where(array('id'=>6))->select();
-                           }elseif ($key == 6){ // 五
-                               $lilv = $configobj->where(array('id'=>7))->select();
-                           }elseif ($key == 7){ // 六
-                               $lilv = $configobj->where(array('id'=>8))->select();
-                           }else{
-                               continue;
-                           }
-                           if($lilv[0]['name']){
-                               $incomes = bcmul($lilv[0]['value'],$bi,2);
-                               $incomes = bcmul($incomes,$_POST['num'],2);
-                               $fidUserinfo= $menber->where(array('uid'=>$val))->select();
-                               if($fidUserinfo[0]['mif'] > 0){
-                                   $dongbag = bcadd($fidUserinfo[0]['dongbag'],$incomes,2);
-                                   $menber->where(array('uid'=>$val))->save(array('dongbag'=>$dongbag));
-                                   $income =M('incomelog');
-                                   $data['type'] =11;
-                                   $data['state'] =1;
-                                   $data['reson'] ='下级购买复投码';
-                                   $data['addymd'] =date('Y-m-d',time());
-                                   $data['addtime'] =time();
-                                   $data['orderid'] =session('uid');
-                                   $data['userid'] = $val ;
-                                   $data['income'] = $incomes;
-                                   $data['cont'] = $_POST['num'];
-                                   if($incomes > 0){
-                                       $income->add($data);
-                                   }
-                               }
-
-                           }
-                    }
-
                 }
 
                 echo "<script>alert('购买成功');";
@@ -610,7 +603,7 @@ class UserController extends CommonController{
                 exit;
             }
             if($res_user[0]['mif']<$_POST['num']){
-                echo "<script>alert('充值钱包余额不足');";
+                echo "<script>alert('余额不足');";
                 echo "window.location.href='".__ROOT__."/index.php/Home/User/transfer_futou';";
                 echo "</script>";
                 exit;
@@ -684,7 +677,12 @@ class UserController extends CommonController{
                 echo "</script>";
                 exit;
             }
-            if($res_user[0]['chargebag']<$_POST['num']){
+
+            $lilv =0.1;
+            $fei =bcmul($_POST['num'],$lilv,2);
+            $left =bcsub($res_user[0]['chargebag'],$fei,2);
+
+            if($left<$_POST['num']){
                 echo "<script>alert('积分不足');";
                 echo "window.location.href='".__ROOT__."/index.php/Home/User/transfer_jifen';";
                 echo "</script>";
@@ -698,7 +696,7 @@ class UserController extends CommonController{
             }
 
             //处理自己
-            $chargebagmy =bcsub($res_user[0]['chargebag'],$_POST['num'],2);
+            $chargebagmy =bcsub($left,$_POST['num'],2);
             $menber->where(array('uid'=>session('uid')))->save(array('chargebag'=>$chargebagmy));
             $income =M('incomelog');
             $logdata['type'] = 8 ;
@@ -708,7 +706,7 @@ class UserController extends CommonController{
             $logdata['addtime'] =time();
             $logdata['orderid'] =$res_user1[0]['uid'] ;
             $logdata['userid'] =session('uid');
-            $logdata['income'] =$_POST['num'];
+            $logdata['income'] =bcadd($_POST['num'],$fei,2);
             $income->add($logdata);
             //处理他人
             $chargebaghim =bcadd($res_user1[0]['chargebag'],$_POST['num'],2);

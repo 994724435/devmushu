@@ -33,7 +33,60 @@ class IndexController extends CommonController {
         $article =M('product');
         $intro= $article->where(array('id'=>$_GET['id']))->find();
         if($_POST['num']){
-            print_r($_POST);die;
+            $isbuy = M("orderlog")->where(array('userid'=>session('uid')))->find();
+            if($isbuy['userid']){
+                echo "<script>alert('您已经购买过商品');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/Index/index';";
+                echo "</script>";
+                exit;
+            }
+            $pro = M("product")->where(array('id'=>$_GET['id']))->find();
+            $order['userid'] =session('uid');
+            $order['productid'] =$pro['id'] ;
+            $order['productname'] =$pro['name'];
+            $order['productmoney'] =$pro['price'];
+            $order['states'] = 1;
+            $order['orderid'] = $_POST['num'];
+            $order['addtime'] = time();
+            $order['addymd'] = date("Y-m-d",time());
+            $order['num'] = $_POST['num'];
+            $order['prices'] =$pro['price'];
+            $order['totals'] =$pro['price'];
+            if($_POST['num'] > 0){
+                M("orderlog")->add($order);
+            }
+
+            $income =M('incomelog');
+            $data['type'] =6;
+            $data['state'] =2;
+            $data['reson'] ='下单购买';
+            $data['addymd'] =date('Y-m-d',time());
+            $data['addtime'] =time();
+            $data['orderid'] =session('uid');
+            $data['userid'] =session('uid');
+            $data['income'] =$pro['price'];
+            if($pro['price'] > 0){
+                $income->add($data);
+            }
+            $menber = M("menber");
+            $userinfo = $menber->where(array('uid'=>session('uid')))->find();
+            $chargebag = bcsub($userinfo['chargebag'],$pro['price'],2);
+            $menber->where(array('uid'=>session('uid')))->save(array('chargebag'=>$chargebag));
+
+            if((int)$pro['price'] == 100){
+                $dongbag =bcadd($userinfo['dongbag'],1);
+                $menber->where(array('uid'=>session('uid')))->save(array('dongbag'=>$dongbag));
+            }
+            if((int)$pro['price'] == 200){
+                $dongbag =bcadd($userinfo['dongbag'],2);
+                $menber->where(array('uid'=>session('uid')))->save(array('dongbag'=>$dongbag));
+            }
+
+
+            echo "<script>alert('购买成功');";
+            echo "window.location.href='".__ROOT__."/index.php/Home/Index/index';";
+            echo "</script>";
+            exit;
         }
         $this->assign('intro',$intro);
         $this->display();
