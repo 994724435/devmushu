@@ -5,10 +5,15 @@ use Think\Controller;
 header('content-type:text/html;charset=utf-8');
 class LoginController extends Controller{
     public function login(){
+        session('uid',0);
         if($_POST){
+            if($_POST['number']!=$_POST['numbers']){
+                echo "<script>alert('验证码错误');</script>";
+                echo "<script>window.location.href='".__ROOT__."/index.php/Home/Login/login';</script>";
+            }
             $menber =M('menber');
-            $res = $menber->where(array('tel'=>$_POST['name'],'pwd'=>$_POST['pwd']))->select();
-            if($res[0]){
+            $res = $menber->where(array('tel'=>$_POST['tel']))->select();
+            if($res[0]['pwd']==$_POST['pwd']){
                 session_start();
                 session('name',$_POST['name']);
                 session('uid',$res[0]['uid']);
@@ -17,6 +22,9 @@ class LoginController extends Controller{
                 echo "<script>alert('用户名或密码错误');</script>";
             }
         }
+        session_start();
+        $numbers = rand(1000,9999);
+        $this->assign('numbers',$numbers);
         $this->display();
     }
 

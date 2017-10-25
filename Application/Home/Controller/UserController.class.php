@@ -87,7 +87,7 @@ class UserController extends CommonController{
                 }else{
                     $data1['type'] = 2;
                 }
-                
+
                 $data1['addymd'] = date('Y-m-d',time());
                 $data1['addtime'] = date('Y-m-d H:i:s',time());
                 $data1['orderid'] = session('uid');     // 注册上家
@@ -125,6 +125,15 @@ class UserController extends CommonController{
     }
 
     public function my(){
+        $menber =M("menber");
+        $userinfo =$menber->where(array('uid'=>session('uid')))->find();
+        if($userinfo['fuid']){
+            $fid = $menber->where(array('uid'=>$userinfo['fuid']))->find();
+            $fuidname = $fid['name'];
+        }else{
+            $fuidname= "暂无";
+        }
+        $this->assign('fuidname',$fuidname);
         $this->display();
     }
 
