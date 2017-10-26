@@ -351,6 +351,8 @@ class UserController extends CommonController{
     * 退本 1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分提现 8静态转账 9动态转账 10静态收益 11 动态收益
      */
     public function width_draw(){
+        $lilv =  M("config")->where(array('id'=>18))->find();
+        $lilv =$lilv['value'];
         if($_POST){
             if($_POST['num']<=0){
                 echo "<script>alert('请输入正确金额在');";
@@ -368,7 +370,8 @@ class UserController extends CommonController{
             }
 
             $left = bcsub($res_user[0]['chargebag'],$_POST['num'],2);
-            $lilcv = 0.2;
+
+            $lilcv = $lilv;
             $fei = bcmul($_POST['num'],$lilcv,2);
             $left = bcsub($left,$fei,2);
             if($left > 0){
@@ -398,31 +401,33 @@ class UserController extends CommonController{
             }
 
         }
+        $this->assign('lilv',$lilv);
         $this->display();
     }
 
 
 
     /*
-    * 静态   1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10静态收益 11 动态收益
+    * 静态   1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10分红收益 11 动态收益
      */
     public function sy_jing(){
         $incomelog =M('incomelog');
         $con['userid'] = session('uid');
         $con['type']   =array('in',array(3,5,8,9,10));
-//        $con['state']   =array('in',array(1,2));
+        $con['state']   =array('in',array(1,2));
         $res = $incomelog->where($con)->order(" id DESC ")->limit(18)->select();
         $this->assign('res',$res);
         $this->display();
     }
 
     /*
-    * 动态
+    * 动态  1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10静态收益 11 动态收益
      */
     public function sy_dong(){
         $incomelog =M('incomelog');
         $con['userid'] = session('uid');
-        $con['type']   =array('in',array(4,9,11));
+//        $con['type']  =array('in',array(4,9,11));
+        $con['type']   =11;
 
         $res = $incomelog->where($con)->order(" id DESC ")->limit(18)->select();
         $this->assign('res',$res);
@@ -734,6 +739,8 @@ class UserController extends CommonController{
      */
     public function transfer_jifen()
     {
+        $lilv =  M("config")->where(array('id'=>19))->find();
+        $lilv =$lilv['value'];
         if($_POST){
             if($_POST['num']<=0){
                 echo "<script>alert('金额不正确');";
@@ -757,7 +764,8 @@ class UserController extends CommonController{
                 exit;
             }
 
-            $lilv =0.1;
+
+
             $fei =bcmul($_POST['num'],$lilv,2);
             $left =bcsub($res_user[0]['chargebag'],$fei,2);
 
@@ -805,6 +813,7 @@ class UserController extends CommonController{
             echo "</script>";
             exit;
         }
+        $this->assign('lilv',$lilv);
         $this->display();
     }
 

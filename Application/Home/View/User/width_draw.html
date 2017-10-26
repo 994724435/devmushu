@@ -18,7 +18,7 @@
 	  <h1 class="mui-title">积分提现</h1>
 	</header>
 	<div class="mui-content">
-	    <p class="tipTitle">提现需手续费20%</p>
+	    <p class="tipTitle">提现需手续费<?php echo (int)bcmul($lilv,100) ?>%</p>
         <form class="mui-input-group" method="post"  enctype="multipart/form-data">
 		    <div class="mui-input-row">
 		        <label>提现金额</label>

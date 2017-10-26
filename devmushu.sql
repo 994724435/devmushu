@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2017-10-25 22:53:31
+Date: 2017-10-26 23:25:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -55,25 +55,25 @@ CREATE TABLE `p_config` (
 -- ----------------------------
 -- Records of p_config
 -- ----------------------------
-INSERT INTO `p_config` VALUES ('1', 'MIF价格', '50', 'MIF价格');
-INSERT INTO `p_config` VALUES ('2', 'MIF静态收益', '0.3', 'MIF静态收益');
-INSERT INTO `p_config` VALUES ('3', '推荐奖 1代', '0.05', '推荐奖 ');
-INSERT INTO `p_config` VALUES ('4', '推荐奖 2代', '0.04', null);
-INSERT INTO `p_config` VALUES ('5', '推荐奖 3代', '0.03', null);
-INSERT INTO `p_config` VALUES ('6', '推荐奖 4代', '0.02', null);
-INSERT INTO `p_config` VALUES ('7', '推荐奖 5代', '0.01', null);
-INSERT INTO `p_config` VALUES ('8', '推荐奖 6代', '0.01', null);
-INSERT INTO `p_config` VALUES ('9', '回馈奖1代', '0.025', null);
-INSERT INTO `p_config` VALUES ('10', '回馈奖2代', '0.02', null);
-INSERT INTO `p_config` VALUES ('11', '回馈奖3代', '0.015', null);
-INSERT INTO `p_config` VALUES ('12', '回馈奖4代', '0.01', null);
+INSERT INTO `p_config` VALUES ('1', '结束收益总额', '300', '结束收益');
+INSERT INTO `p_config` VALUES ('2', '每日动态收益', '30', '动态收益');
+INSERT INTO `p_config` VALUES ('3', '推荐奖 1代', '0.05', '1');
+INSERT INTO `p_config` VALUES ('4', '推荐奖 2代', '0.04', '2');
+INSERT INTO `p_config` VALUES ('5', '推荐奖 3代', '0.03', '3');
+INSERT INTO `p_config` VALUES ('6', '推荐奖 4代', '0.02', '4');
+INSERT INTO `p_config` VALUES ('7', '推荐奖 5代', '0.01', '5');
+INSERT INTO `p_config` VALUES ('8', '推荐奖 6代', '0.01', '6');
+INSERT INTO `p_config` VALUES ('9', '推荐奖 7代', '0.01', '7');
+INSERT INTO `p_config` VALUES ('10', '推荐奖 8代', '0.01', '8');
+INSERT INTO `p_config` VALUES ('11', '推荐奖 9代', '0.01', '9');
+INSERT INTO `p_config` VALUES ('12', '推荐奖 10代', '0.01', '10');
 INSERT INTO `p_config` VALUES ('13', '回馈奖5代', '0.01', null);
 INSERT INTO `p_config` VALUES ('14', '回馈奖6代', '0.01', null);
 INSERT INTO `p_config` VALUES ('15', '最低提现金额', '10', '最大提现金额');
 INSERT INTO `p_config` VALUES ('16', '每日最大提现次数', '50', '每日最大提现次数');
 INSERT INTO `p_config` VALUES ('17', '公排价格', '70', '公排价格');
-INSERT INTO `p_config` VALUES ('18', '静态提现手续费', '0.00', '静态提现手续费');
-INSERT INTO `p_config` VALUES ('19', '动态提现手续费', '0.1', '动态提现手续费');
+INSERT INTO `p_config` VALUES ('18', '积分提现手续费', '0.2', '积分提现手续费');
+INSERT INTO `p_config` VALUES ('19', '积分转账手续费', '0.10', '动态提现手续费');
 
 -- ----------------------------
 -- Table structure for p_incomelog
@@ -81,7 +81,7 @@ INSERT INTO `p_config` VALUES ('19', '动态提现手续费', '0.1', '动态提�
 DROP TABLE IF EXISTS `p_incomelog`;
 CREATE TABLE `p_incomelog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` int(11) DEFAULT '1' COMMENT '1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10静态收益 11 动态收益',
+  `type` int(11) DEFAULT '1' COMMENT '1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10分红收益 11 动态收益',
   `state` int(11) DEFAULT '1' COMMENT '1收入   2支出 3失败',
   `reson` varchar(255) DEFAULT NULL COMMENT '原因',
   `addymd` date DEFAULT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE `p_incomelog` (
   `income` varchar(64) DEFAULT '0' COMMENT '金额',
   `cont` varchar(1000) NOT NULL COMMENT '后台备注',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=490 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=526 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of p_incomelog
@@ -103,6 +103,21 @@ INSERT INTO `p_incomelog` VALUES ('486', '1', '1', '注册收入', '2017-10-25',
 INSERT INTO `p_incomelog` VALUES ('487', '5', '2', '注册下级', '2017-10-25', '1508940409', '22', '1', '200', '');
 INSERT INTO `p_incomelog` VALUES ('488', '1', '1', '注册收入', '2017-10-25', '2017', '1', '22', '2', '');
 INSERT INTO `p_incomelog` VALUES ('489', '6', '2', '复投', '2017-10-25', '1508942253', '1', '1', '100', '');
+INSERT INTO `p_incomelog` VALUES ('511', '10', '1', '分红收益', '2017-10-26', '1509029691', '1', '1', '30', '');
+INSERT INTO `p_incomelog` VALUES ('512', '10', '1', '分红收益', '2017-10-26', '1509029691', '1', '2', '30', '');
+INSERT INTO `p_incomelog` VALUES ('513', '11', '1', '动态收益', '2017-10-26', '1509029691', '2', '1', '1.50', '');
+INSERT INTO `p_incomelog` VALUES ('514', '10', '1', '分红收益', '2017-10-26', '1509029981', '1', '1', '30', '');
+INSERT INTO `p_incomelog` VALUES ('515', '10', '1', '分红收益', '2017-10-26', '1509029981', '1', '2', '30', '');
+INSERT INTO `p_incomelog` VALUES ('516', '11', '1', '动态收益', '2017-10-26', '1509029981', '2', '1', '1.50', '');
+INSERT INTO `p_incomelog` VALUES ('517', '10', '1', '分红收益', '2017-10-26', '1509030063', '1', '1', '30', '');
+INSERT INTO `p_incomelog` VALUES ('518', '10', '1', '分红收益', '2017-10-26', '1509030063', '1', '2', '30', '');
+INSERT INTO `p_incomelog` VALUES ('519', '11', '1', '动态收益', '2017-10-26', '1509030063', '2', '1', '1.50', '');
+INSERT INTO `p_incomelog` VALUES ('520', '10', '1', '分红收益', '2017-10-26', '1509030141', '1', '1', '30', '');
+INSERT INTO `p_incomelog` VALUES ('521', '10', '1', '分红收益', '2017-10-26', '1509030141', '1', '2', '30', '');
+INSERT INTO `p_incomelog` VALUES ('522', '11', '1', '动态收益', '2017-10-26', '1509030141', '2', '1', '1.50', '');
+INSERT INTO `p_incomelog` VALUES ('523', '10', '1', '分红收益', '2017-10-26', '1509030561', '1', '1', '30', '');
+INSERT INTO `p_incomelog` VALUES ('524', '10', '1', '分红收益', '2017-10-26', '1509030561', '1', '2', '30', '');
+INSERT INTO `p_incomelog` VALUES ('525', '11', '1', '动态收益', '2017-10-26', '1509030561', '2', '1', '1.50', '');
 
 -- ----------------------------
 -- Table structure for p_login
@@ -159,10 +174,10 @@ CREATE TABLE `p_menber` (
 -- ----------------------------
 -- Records of p_menber
 -- ----------------------------
-INSERT INTO `p_menber` VALUES ('1', '100', '1', '100', null, '1', '3', '0', '0', '1,', null, null, '1', '100', 'fsda', '1121', '121', '12121', null, null, null, '0', '0', '30');
-INSERT INTO `p_menber` VALUES ('2', '101', '1', '101', null, '1', '0', '0', '1', '1,2,', '1502892880', '2017-08-16', '1', '100.00', null, null, null, null, null, null, null, '1', '0', '14');
-INSERT INTO `p_menber` VALUES ('3', '102', '1', '102', null, '1', '14', '174', '1', '1,3,', '1502893254', '2017-08-16', '1', '6.00', null, null, null, null, null, null, null, '2', '0', '14');
-INSERT INTO `p_menber` VALUES ('22', '18883287644', '1', '18883287644', null, '1', '2', '0', '1', '1,', '1508940409', '2017-10-25', '1', '0', null, null, null, null, null, null, null, '0', '0', '0');
+INSERT INTO `p_menber` VALUES ('1', '100', '1', '100', null, '1', '0', '0', '0', '1,', null, null, '1', '880.00', 'fsda', '1121', '121', '12121', null, null, null, '0', '0', '30');
+INSERT INTO `p_menber` VALUES ('2', '101', '1', '101', null, '1', '0', '0', '1', '1,2,', '1502892880', '2017-08-16', '1', '881.50', null, null, null, null, null, null, null, '1', '0', '14');
+INSERT INTO `p_menber` VALUES ('3', '102', '1', '102', null, '1', '0', '174', '1', '1,3,', '1502893254', '2017-08-16', '1', '751.00', null, null, null, null, null, null, null, '2', '0', '14');
+INSERT INTO `p_menber` VALUES ('22', '18883287644', '1', '18883287644', null, '1', '0', '0', '3', '1,3,22,', '1508940409', '2017-10-25', '1', '732.40', null, null, null, null, null, null, null, '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for p_message

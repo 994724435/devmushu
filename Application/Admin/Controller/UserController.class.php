@@ -48,47 +48,72 @@ class UserController extends Controller {
 
     /**
      * 静态收益 ok
+     * 1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10分红收益 11 动态收益
      */
     public function crontab(){  //我的团队
         $incomelog =M('incomelog');
-        $res = $incomelog->where(array('addymd'=>date('Y-m-d'),'type'=>10))->select();
-
-        if($res[0]){
-            print_r('今日受益已结算');die;
-        }
-        $orderlog =M('orderlog');
-        //所有
-        $allorderlog = $orderlog->where(array('state'=>1,'productid'=>1))->select();
+//        $res = $incomelog->where(array('addymd'=>date('Y-m-d'),'type'=>10))->select();
+//
+//        if($res[0]){
+//            print_r('今日受益已结算');die;
+//        }
         $menber = M("menber");
-        foreach($allorderlog as $key=>$val) {
-            //自己受益
-            $res_own = $this->getusernums($val['userid'], $val['logid'], $val['num']);
-            if (!$res_own) {
-                continue;
-            }
-            $configobj =M('config')->where(array('id'=>2))->select();
-            $config =$configobj[0]['value'];
-            $configobjs =M('config')->where(array('id'=>1))->select();
-            $jiage =$configobjs[0]['value'];
-            
-            $base = bcmul($jiage, $config,4);
-            $income = bcmul($base, $val['num'], 2);
-            $data['state'] = 1;
-            $data['reson'] = "静态收益";
-            $data['type'] = 10;
-            $data['addymd'] = date('Y-m-d', time());
-            $data['addtime'] = time();
-            $data['orderid'] = $val['logid'];
-            $data['userid'] = $val['userid'];
-            $data['income'] = $income;
-            if ($income > 0) {
-                $userinfo = $menber->where(array('uid'=>$val['userid']))->select();
-                $afterincom = bcadd($userinfo[0]['jingbag'],$income);
-                $menber->where(array('uid'=>$val['userid']))->save(array('jingbag'=>$afterincom));
-                $this->savelog($data);
-            }
+        $configobj =M('config')->where(array('id'=>2))->select();
+        $config2 =$configobj[0]['value'];
+        $alluser = $menber->select();
+        foreach($alluser as $key=>$val) {
+            if($val['dongbag'] > 0){
+                // 查询是否有收益
+                if(!$this->getusernums($val['uid'],$val['dongbag'])){
+                    M("incomelog")->where(array('userid'=>$val['uid'],'state'=>1,'type'=>10))->save(array('state'=>0));
+                    $menber->where(array('uid'=>$val['uid']))->save(array('dongbag'=>0));
+                }
+                $todayincome = bcmul($val['dongbag'],$config2,2);
+                $data['state'] = 1;
+                $data['reson'] = "分红收益";
+                $data['type'] = 10;
+                $data['addymd'] = date('Y-m-d', time());
+                $data['addtime'] = time();
+                $data['orderid'] =$val['dongbag'];
+                $data['userid'] = $val['uid'];
+                $data['income'] = $todayincome;
+                if ($todayincome > 0) {
+                    $userinfo = $menber->where(array('uid'=>$val['uid']))->select();
+                    $afterincom = bcadd($userinfo[0]['chargebag'],$todayincome,2);
+                    $menber->where(array('uid'=>$val['uid']))->save(array('chargebag'=>$afterincom));
+                    $this->savelog($data);
+                    if($val['fuids'] && $val['fuid']){   // 处理上家
+                        $newstrs = substr($val['fuids'],0,strlen($val['fuids'])-1);
+                        $array =array_reverse(explode(',',$newstrs));
 
+                        foreach ($array as $k1=>$v1){
+                            if($k1){
+                                $configx =M('config')->where(array('complan'=>$k1))->find();
+                                $data['state'] = 1;
+                                $data['reson'] = "动态收益";
+                                $data['type'] = 11;
+                                $data['addymd'] = date('Y-m-d', time());
+                                $data['addtime'] = time();
+                                $data['orderid'] =$val['uid'];
+                                $data['userid'] = $v1;
+                                $incomesnet =bcmul($configx['value'],$todayincome,2);
+                                $data['income'] = $incomesnet;
+                                if($incomesnet){
+                                    $userinfos = $menber->where(array('uid'=>$v1))->select();
+                                    $afterincom = bcadd($userinfos[0]['chargebag'],$incomesnet,2);
+                                    $menber->where(array('uid'=>$val['uid']))->save(array('chargebag'=>$afterincom));
+                                     $this->savelog($data);
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+            }
         }
+
+
         echo '成功';
     }
 
@@ -96,18 +121,16 @@ class UserController extends Controller {
      * @return int ok
      * 是否有每日收益
      */
-    public function getusernums($userid,$orderid,$num){
+    public function getusernums($userid,$num){
         $income =M('incomelog');
-        $daycomelogs = $income->where(array('type'=>10,'userid'=>$userid,'orderid'=>$orderid))->select();
+        $daycomelogs = $income->where(array('type'=>10,'userid'=>$userid,'state'=>1))->select();
         $daycome =0;
         foreach($daycomelogs as $k=>$v){
             $daycome=bcadd($daycome,$v['income'],2);
         }
         $conf = M("config")->where(array('id'=>1))->select();
-//        $endmoney = 90 * $num;
-        $endmoney = bcmul($conf[0]['value'],$num);
-        $endmoneys =bcmul($endmoney,2 );
-        if($daycome>=$endmoneys){
+        $endmoney = bcmul($conf[0]['value'],$num,2);
+        if($daycome>=$endmoney){
             return 0;
         }else{
             return 1;
