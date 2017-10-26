@@ -5,6 +5,88 @@ use Think\Controller;
 header('content-type:text/html;charset=utf-8');
 class UserController extends CommonController{
 
+    public function test(){
+        $uid =1;
+        $str = $this->get_category($uid,1);
+        $newstr = substr($str,0,strlen($str)-1);
+        $nextuser = M("menber")->where(array('uid'=>array('in',$newstr)))->select();
+        if($nextuser[0]){
+            foreach ($nextuser as $key=>$value){
+                if($value['uid'] ==$uid){
+                    continue;
+                }
+                if($value['fuids']){
+                    $newstrs = substr($value['fuids'],0,strlen($value['fuids'])-1);
+                    $array =array_reverse(explode(',',$newstrs));
+                    foreach ($array as $k1=>$v1){
+                        if($v1 == $uid){
+                           $temp[$k1][]  =$value;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        print_r($temp);die;
+        print_r($nextuser);
+        die;
+    }
+
+    //获取指定分类的所有子分类 键为ID，值为分类名
+    function getCateKv($categoryID)
+    {
+        //初始化ID数组,赋值当前分类
+        $array[] = M('cate')->where("id={$categoryID}")->getField("cateName");
+        do
+        {
+            $ids = '';
+            $where['pid'] = array('in',$categoryID);
+            $cate = M('cate')->where($where)->select();
+            echo M('cate')->_sql();
+            foreach ($cate as $k=>$v)
+            {
+                $array[$v['id']] = $v['cateName'];
+                $ids .= ',' . $v['id'];
+            }
+            $ids = substr($ids, 1, strlen($ids));
+            $categoryID = $ids;
+        }
+        while (!empty($cate));
+        $ids = implode(',', $array);
+
+        //return $ids; //  返回字符串
+        return $array; //返回数组
+    }
+
+
+
+    function get_category( $category_id ,$level){
+        $category_ids = $category_id.",";
+        $child_category =M("menber")->where(array('fuid'=>$category_id))->select();
+        $levels =$level+1;
+//        print_r($level);
+        foreach( $child_category as $key => $val ){
+            $item[$val['uid']]=$child_category[$key];
+            $category_ids .=$this->get_category( $val["uid"],$levels);
+        }
+        return $category_ids;
+    }
+
+//获取某个分类的所有子分类
+    function getSubs($categorys,$catId=0,$level=1){
+        $subs=array();
+        foreach($categorys as $item){
+             M("menber")->where(array('uid'=>1))->find();
+            if($item['uid']==$catId){
+                $item['level']=$level;
+                $subs[]=$item;
+                $subs=array_merge($subs,getSubs($categorys,$item['fuid'],$level+1));
+            }
+        }
+        return $subs;
+    }
+
     public function reg(){  //注册下级
         if($_POST['tel']&&$_POST['pwd']){
             if(preg_match("/^1[34578]{1}\d{9}$/",$_POST['tel'])){
@@ -510,32 +592,29 @@ class UserController extends CommonController{
     * 我的团队
      */
     public function my_group(){
-        $menber = M("menber");
-        $p_incomelog =M('incomelog');
-        $con['userid'] = session('uid');
-        $con['type'] = 11;
-        $con['userid'] =session('uid');
-//        $con['type'] =array('in',array(10,11));
-        $result = $p_incomelog->where($con)->order('id DESC')->select();
-        foreach ($result as $k=>$v){
-//            $user = $menber->where(array('uid'=>$v['userid']))->select();
-//            $result[$k]['username'] =$user[0]['name'];
-            $times = 0;
-            $usrinfo = $menber->where(array('uid'=>$v['orderid']))->select();
-            $fids =array_reverse(explode(',',$usrinfo[0]['fuids']));
-            foreach ($fids as $key=>$val){
-                if($val == session('uid')){
-                    $times = $key ;
-                    break;
+        $uid =session('uid');
+        $str = $this->get_category($uid,1);
+        $newstr = substr($str,0,strlen($str)-1);
+        $nextuser = M("menber")->where(array('uid'=>array('in',$newstr)))->select();
+        if($nextuser[0]){
+            foreach ($nextuser as $key=>$value){
+                if($value['uid'] ==$uid){
+                    continue;
                 }
+                if($value['fuids']){
+                    $newstrs = substr($value['fuids'],0,strlen($value['fuids'])-1);
+                    $array =array_reverse(explode(',',$newstrs));
+                    foreach ($array as $k1=>$v1){
+                        if($v1 == $uid){
+                            $temp[$k1][]  =$value;
+                        }
+                    }
+                }
+
             }
-            $result[$k]['times'] =$this->changeTimes($times);
-            // 上级编号
-//            $shang = M('orderlog')->where(array('userid'=>$usrinfo[0]['fuid']))->order('logid DESC')->select();
-            $result[$k]['shang'] =$usrinfo[0]['fuid'];
         }
-//        print_r($result);die;
-        $this->assign('res',$result);
+
+        $this->assign('res',$temp);
         $this->display();
     }
 
