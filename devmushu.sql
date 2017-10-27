@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2017-10-26 23:25:13
+Date: 2017-10-27 22:44:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -81,43 +81,25 @@ INSERT INTO `p_config` VALUES ('19', '积分转账手续费', '0.10', '动态提
 DROP TABLE IF EXISTS `p_incomelog`;
 CREATE TABLE `p_incomelog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` int(11) DEFAULT '1' COMMENT '1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10分红收益 11 动态收益',
+  `type` int(11) DEFAULT '1' COMMENT '1收益 2充值 3静态提现  4动态体现  5 注册下级 6下单购买 7积分体现 8积分转账 9复投码转账 10分红收益 11 动态收益 12挂卖',
   `state` int(11) DEFAULT '1' COMMENT '1收入   2支出 3失败',
   `reson` varchar(255) DEFAULT NULL COMMENT '原因',
   `addymd` date DEFAULT NULL,
   `addtime` int(12) DEFAULT NULL,
-  `orderid` varchar(100) DEFAULT NULL,
+  `orderid` varchar(100) DEFAULT '1' COMMENT '1 卖方 2 买方',
   `userid` int(11) DEFAULT NULL,
   `income` varchar(64) DEFAULT '0' COMMENT '金额',
   `cont` varchar(1000) NOT NULL COMMENT '后台备注',
+  `username` varchar(100) DEFAULT NULL,
+  `tel` varchar(100) DEFAULT NULL,
+  `commitid` varchar(64) DEFAULT '1',
+  `weixin` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=526 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=536 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of p_incomelog
 -- ----------------------------
-INSERT INTO `p_incomelog` VALUES ('483', '5', '2', '注册下级', '2017-10-25', '1508940067', '20', '1', '100', '');
-INSERT INTO `p_incomelog` VALUES ('484', '1', '1', '注册收入', '2017-10-25', '2017', '1', '20', '1', '');
-INSERT INTO `p_incomelog` VALUES ('485', '5', '2', '注册下级', '2017-10-25', '1508940191', '21', '1', '100', '');
-INSERT INTO `p_incomelog` VALUES ('486', '1', '1', '注册收入', '2017-10-25', '2017', '1', '21', '1', '');
-INSERT INTO `p_incomelog` VALUES ('487', '5', '2', '注册下级', '2017-10-25', '1508940409', '22', '1', '200', '');
-INSERT INTO `p_incomelog` VALUES ('488', '1', '1', '注册收入', '2017-10-25', '2017', '1', '22', '2', '');
-INSERT INTO `p_incomelog` VALUES ('489', '6', '2', '复投', '2017-10-25', '1508942253', '1', '1', '100', '');
-INSERT INTO `p_incomelog` VALUES ('511', '10', '1', '分红收益', '2017-10-26', '1509029691', '1', '1', '30', '');
-INSERT INTO `p_incomelog` VALUES ('512', '10', '1', '分红收益', '2017-10-26', '1509029691', '1', '2', '30', '');
-INSERT INTO `p_incomelog` VALUES ('513', '11', '1', '动态收益', '2017-10-26', '1509029691', '2', '1', '1.50', '');
-INSERT INTO `p_incomelog` VALUES ('514', '10', '1', '分红收益', '2017-10-26', '1509029981', '1', '1', '30', '');
-INSERT INTO `p_incomelog` VALUES ('515', '10', '1', '分红收益', '2017-10-26', '1509029981', '1', '2', '30', '');
-INSERT INTO `p_incomelog` VALUES ('516', '11', '1', '动态收益', '2017-10-26', '1509029981', '2', '1', '1.50', '');
-INSERT INTO `p_incomelog` VALUES ('517', '10', '1', '分红收益', '2017-10-26', '1509030063', '1', '1', '30', '');
-INSERT INTO `p_incomelog` VALUES ('518', '10', '1', '分红收益', '2017-10-26', '1509030063', '1', '2', '30', '');
-INSERT INTO `p_incomelog` VALUES ('519', '11', '1', '动态收益', '2017-10-26', '1509030063', '2', '1', '1.50', '');
-INSERT INTO `p_incomelog` VALUES ('520', '10', '1', '分红收益', '2017-10-26', '1509030141', '1', '1', '30', '');
-INSERT INTO `p_incomelog` VALUES ('521', '10', '1', '分红收益', '2017-10-26', '1509030141', '1', '2', '30', '');
-INSERT INTO `p_incomelog` VALUES ('522', '11', '1', '动态收益', '2017-10-26', '1509030141', '2', '1', '1.50', '');
-INSERT INTO `p_incomelog` VALUES ('523', '10', '1', '分红收益', '2017-10-26', '1509030561', '1', '1', '30', '');
-INSERT INTO `p_incomelog` VALUES ('524', '10', '1', '分红收益', '2017-10-26', '1509030561', '1', '2', '30', '');
-INSERT INTO `p_incomelog` VALUES ('525', '11', '1', '动态收益', '2017-10-26', '1509030561', '2', '1', '1.50', '');
 
 -- ----------------------------
 -- Table structure for p_login
@@ -174,9 +156,9 @@ CREATE TABLE `p_menber` (
 -- ----------------------------
 -- Records of p_menber
 -- ----------------------------
-INSERT INTO `p_menber` VALUES ('1', '100', '1', '100', null, '1', '0', '0', '0', '1,', null, null, '1', '880.00', 'fsda', '1121', '121', '12121', null, null, null, '0', '0', '30');
+INSERT INTO `p_menber` VALUES ('1', '100', '1', '100', null, '1', '0', '0', '0', '1,', null, null, '1', '430.00', 'fsda', '1121', '121', '12121', null, null, null, '0', '0', '30');
 INSERT INTO `p_menber` VALUES ('2', '101', '1', '101', null, '1', '0', '0', '1', '1,2,', '1502892880', '2017-08-16', '1', '881.50', null, null, null, null, null, null, null, '1', '0', '14');
-INSERT INTO `p_menber` VALUES ('3', '102', '1', '102', null, '1', '0', '174', '1', '1,3,', '1502893254', '2017-08-16', '1', '751.00', null, null, null, null, null, null, null, '2', '0', '14');
+INSERT INTO `p_menber` VALUES ('3', '102', '1', '102', null, '1', '0', '174', '1', '1,3,', '1502893254', '2017-08-16', '1', '700.00', null, null, null, null, null, null, null, '2', '0', '14');
 INSERT INTO `p_menber` VALUES ('22', '18883287644', '1', '18883287644', null, '1', '0', '0', '3', '1,3,22,', '1508940409', '2017-10-25', '1', '732.40', null, null, null, null, null, null, null, '0', '0', '0');
 
 -- ----------------------------

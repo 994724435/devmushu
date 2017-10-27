@@ -5,6 +5,117 @@ use Think\Controller;
 header('content-type:text/html;charset=utf-8');
 class UserController extends CommonController{
 
+    public function buylog(){
+        if(!$_GET['id']){
+            echo "<script>alert('ID异常');";
+            echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+            echo "</script>";
+            exit;
+        }
+
+        $incomelog =M("incomelog")->where(array('id'=>$_GET['id']))->find();
+        $state =$incomelog['state']+1;
+        M("incomelog")->where(array('commitid'=>$incomelog['commitid']))->save(array('state'=>$state));
+
+        echo "<script>alert('操作成功');";
+        echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+        echo "</script>";
+        exit;
+    }
+
+    // state 0 出售中   4 已购买
+    public function buy(){
+        if(!$_GET['id']){
+            echo "<script>alert('ID异常');";
+            echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+            echo "</script>";
+            exit;
+        }
+        $incomelog =M("incomelog")->where(array('id'=>$_GET['id']))->find();
+        if(session('uid')==$incomelog['userid']){
+            echo "<script>alert('不能购买自己的挂买');";
+            echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+            echo "</script>";
+            exit;
+        }
+        $userinfo =M("menber")->where(array('uid'=>session('uid')))->find();
+        $logid =$incomelog['id'];
+        $commitid =date('YmdHis').rand(100,999);
+        M("incomelog")->where(array('id'=>$_GET['id']))->save(array('commitid'=>$commitid,'state'=>4));
+        unset($incomelog['id']);
+        $incomelog['userid'] =session('uid');
+//        $incomelog['tel'] =$userinfo['tel'];
+//        $incomelog['weixin'] =$userinfo['weixin'];
+//        $incomelog['username'] =$userinfo['name'];
+        $incomelog['state'] =4;
+        $incomelog['orderid'] =2;
+        $incomelog['commitid'] =$commitid;
+        M("incomelog")->add($incomelog);
+
+        echo "<script>alert('操作成功，请联系卖家');";
+        echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+        echo "</script>";
+        exit;
+
+    }
+
+    public function sale_list(){
+        $data['type'] =12;
+        $data['state'] =0;
+        $data['commitid'] =0;
+        $list =M("incomelog")->where($data)->select();
+
+        //交易中数据
+        $con['type'] =12;
+        $con['state'] =array('in',array(4,5,6));
+        $con['userid'] =session('uid');
+        $listing = M("incomelog")->where($con)->select();
+        $this->assign('listing',$listing);
+        $this->assign('res',$list);
+        $this->display();
+    }
+
+    // 售卖
+    public function my_sale(){
+        if($_POST['income']){
+
+            foreach ($_POST as $v){
+                if(!$v){
+                    echo "<script>alert('请填写完整');";
+                    echo "window.location.href='".__ROOT__."/index.php/Home/User/my_sale';";
+                    echo "</script>";
+                    exit;
+                }
+            }
+            $menber = M("menber");
+            $userinfo = $menber->where(array('uid'=>session('uid')))->select();
+
+            if($userinfo[0]['chargebag'] < $_POST['income']){
+                echo "<script>alert('积分不足');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/my';";
+                echo "</script>";
+                exit;
+            }
+            $left = bcsub($userinfo[0]['chargebag'],$_POST['income'],2);
+            $menber->where(array('uid'=>session('uid')))->save(array('chargebag'=>$left));
+            $data =$_POST;
+            $data['type'] =12;
+            $data['state'] =0;
+            $data['reson'] ='积分挂买';
+            $data['addymd'] =date('Y-m-d',time());
+            $data['addtime'] =time();
+            $data['orderid'] =1;
+            $data['userid'] =session('uid');
+            $data['commitid']='';
+            M("incomelog")->add($data);
+            echo "<script>alert('挂买成功');";
+            echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+            echo "</script>";
+            exit;
+        }
+        $this->display();
+    }
+
     public function test(){
         $uid =1;
         $str = $this->get_category($uid,1);
@@ -224,7 +335,7 @@ class UserController extends CommonController{
 
 
     public function popularize(){
-        $url = "http://www.898tj.com"."/index.php/Home/Login/reg/fid/".session('uid').".html";
+        $url = "http://366757.ouyouhui.com"."/index.php/Home/Login/reg/fid/".session('uid').".html";
         $this->assign('url',$url);
         $this->display();
     }

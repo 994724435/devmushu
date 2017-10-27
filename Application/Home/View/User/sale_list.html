@@ -31,21 +31,38 @@
     			<th>挂卖积分数量</th>
     			<th>操作</th>
     		</tr>
+
+			<foreach name="listing" item='v'>
+				<tr>
+					<td>{$v.tel}</td>
+					<td>{$v.income}</td>
+					<td>
+						<if condition="$v.orderid eq 1">
+							<if condition="$v.state eq 4"> 等待买家打款
+								<elseif condition="$v.state eq 5"/>
+								<a href="__ROOT__/index.php/Home/User/buylog/id/{$v.id}">确认收款</a>
+								<elseif condition="$v.state eq 6"/>已完成
+							</if>
+						</if>
+						<if condition="$v.orderid eq 2">
+							<if condition="$v.state eq 4">
+								<a href="__ROOT__/index.php/Home/User/buylog/id/{$v.id}">确认打款</a>
+								<elseif condition="$v.state eq 5"/>等待卖家确认收款
+								<elseif condition="$v.state eq 6"/>已完成
+							</if>
+						</if>
+					</td>
+				</tr>
+			</foreach>
+
+
+			<foreach name="res" item='v'>
     		<tr>
-    			<td>18882286757</td>
-    			<td>100</td>
-    			<td><a href="sale_buy.html">购买</a></td>
+    			<td>{$v.tel}</td>
+    			<td>{$v.income}</td>
+    			<td><a href="javascript:if(confirm('确认购买'))location='__ROOT__/index.php/Home/User/buy/id/{$v.id}'">交易中</a></td>
     		</tr>
-    		<tr>
-    			<td>18882286757</td>
-    			<td>100</td>
-    			<td><a href="sale_buy.html">购买</a></td>
-    		</tr>
-    		<tr>
-    			<td>18882286757</td>
-    			<td>100</td>
-    			<td><a href="sale_buy.html">购买</a></td>
-    		</tr>
+			</foreach>
 	    </table>
 	</div>
 </body>

@@ -20,22 +20,22 @@
 	  <h1 class="mui-title">我要挂卖</h1>
 	</header>
 	<div class="mui-content">
-	    <form class="mui-input-group">
+	    <form class="mui-input-group" method="post" enctype="multipart/form-data">
 		    <div class="mui-input-row">
 		        <label>积分数量</label>
-		        <input type="number" class="mui-input-clear" placeholder="请输入挂卖积分数量">
+		        <input type="number" name="income" class="mui-input-clear" placeholder="请输入挂卖积分数量">
 		    </div>
 		    <div class="mui-input-row">
 		        <label>微信号</label>
-		        <input type="text" class="mui-input-clear" placeholder="请输入我的微信号">
+		        <input type="text" name="weixin" class="mui-input-clear" placeholder="请输入我的微信号">
 		    </div>
 		    <div class="mui-input-row">
 		        <label>手机号</label>
-		        <input type="number" class="mui-input-clear" placeholder="请输入我的手机号">
+		        <input type="number" name="tel" class="mui-input-clear" placeholder="请输入我的手机号">
 		    </div>
 		    <div class="mui-input-row">
 		        <label>姓名</label>
-		        <input type="text" class="mui-input-clear" placeholder="请输入我的姓名">
+		        <input type="text" name="username" class="mui-input-clear" placeholder="请输入我的姓名">
 		    </div>
 		   
 			<button class="mui-btn mui-btn-block">确认挂卖</button>
