@@ -12,7 +12,7 @@
 			  <h3>用户列表</h3>
 			  <form class="form-horizontal" action="" method="get" enctype="multipart/form-data">
 				  <div class="form-group">
-					  <label for="focusedinput" class="col-sm-2 control-label">用户名</label>
+					  <label for="focusedinput" class="col-sm-2 control-label">用户电话</label>
 					  <div class="col-sm-8">
 						  <input type="text" name="name" value="" class="form-control1" id="focusedinput" placeholder="">
 						  <p style="margin-left: 200px;margin-top: 20px;"></p><button class="btn-success btn">Submit</button>
@@ -33,9 +33,10 @@
 		          <th>用户id</th>
 					<th>注册上家id</th>
 					<th>姓名</th>
-		          <th>动态钱包</th>
-				  <th>静态钱包</th>
-				  <th>充值钱包</th>
+					<th>电话</th>
+		          <th>股份</th>
+
+				  <th>积分</th>
 		          <th>注册时间</th>
 					<th>操作</th>
 		        </tr>
@@ -56,8 +57,8 @@
 		          <th scope="row">{$v.uid}</th>
 				  <th>{$v.fuid}</th>
 				  <th>{$v.name}</th>
+				  <th>{$v.tel}</th>
 		           <th>{$v.dongbag}</th>
-				  <th>{$v.jingbag}</th>
 				  <th>{$v.chargebag}</th>
 				  <td>{$v.addymd}</td>
 				  <th><a href="__ROOT__/index.php/Admin/Menber/editeUser/id/{$v.uid}">修 改 </a></th>

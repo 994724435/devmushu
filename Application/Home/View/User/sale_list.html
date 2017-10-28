@@ -34,7 +34,7 @@
 
 			<foreach name="listing" item='v'>
 				<tr>
-					<td>{$v.tel}</td>
+					<td><a href="__ROOT__/index.php/Home/User/sale_buy/id/{$v.id}">{$v.tel}</a></td>
 					<td>{$v.income}</td>
 					<td>
 						<if condition="$v.orderid eq 1">

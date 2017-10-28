@@ -18,9 +18,9 @@
 					  用户id <input type="text" name="uid" style="width: 150px" value="" id="focusedinput" placeholder="">
 					  订单状态<select style="width: 150px" name="state">
 								  <option value="0">全部</option>
-								  <option value="3">待支付</option>
-								  <option value="1">收益中</option>
-					  			  <option value="2">已完成</option>
+
+								  <option value="1">已购买</option>
+					  			  <option value="2">已发货</option>
 							  </select>
 
 					   </div>
@@ -45,6 +45,7 @@
 		          <th>购买数量</th>
 				  <th>支付状态</th>
 					<th>产品价格</th>
+					<th>操作</th>
 		        </tr>
 		      </thead>
 		      <tbody>	      
@@ -65,8 +66,9 @@
 				  <!--<th>{$v.productid}</th>-->
 		          <th>{$v.productname}</th>
 		          <th>{$v.num}</th>
-				  <th><if condition="$v.states eq 0"> 待支付<elseif condition="$v.states eq 1"/>收益中<elseif condition="$v.states eq 2"/>已完成</if></th>
+				  <th><if condition="$v.states eq 0"> 待支付<elseif condition="$v.states eq 1"/>已购买<elseif condition="$v.states eq 2"/>已发货</if></th>
 				  <th>{$v.prices}</th>
+				  <th><if condition="$v.states eq 1"><a href="__ROOT__/index.php/Admin/Index/comproduct/id/{$v.logid}">发货</a><elseif condition="$v.states eq 2"/>已发货</if></if></th>
 		        </tr>
 		      	<?php $i++ ;?>
 		       </foreach>		      

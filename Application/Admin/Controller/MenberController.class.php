@@ -5,7 +5,7 @@ class MenberController extends CommonController {
 	public function select(){
         $menber = M('menber');
         if($_GET['name']){
-            $map['name']=array('like','%'.$_GET['name'].'%');
+            $map['tel']=array('like','%'.$_GET['name'].'%');
             $users= $menber->where($map)->select();
         }else{
             $users= $menber->select();
@@ -86,7 +86,7 @@ class MenberController extends CommonController {
                 exit();
             }
             $data =$_POST;
-            $data['chargebag'] = '5';
+            $data['chargebag'] = '0';
             $uid =  $menber->add($data);
 
             if($fids){

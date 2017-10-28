@@ -4,7 +4,12 @@ namespace Admin\Controller;
 use Think\Controller;
 header('content-type:text/html;charset=utf-8');
 class IndexController extends CommonController {
-	
+	public function comproduct(){
+	    M("orderlog")->where(array('logid'=>$_GET['id']))->save(array('states'=>2));
+        echo "<script>alert('修改成功');window.location.href = '".__ROOT__."/index.php/Admin/Index/select';</script>";
+        exit();
+    }
+
     public function main(){
         $user = M('user');
 //        if($_SESSION['manager']==2){

@@ -5,6 +5,18 @@ use Think\Controller;
 header('content-type:text/html;charset=utf-8');
 class UserController extends CommonController{
 
+    public function sale_buy(){
+        if(!$_GET['id']){
+            echo "<script>alert('ID异常');";
+            echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+            echo "</script>";
+            exit;
+        }
+        $incomelog =M("incomelog")->where(array('id'=>$_GET['id']))->find();
+        $this->assign('res',$incomelog);
+        $this->display();
+    }
+
     public function buylog(){
         if(!$_GET['id']){
             echo "<script>alert('ID异常');";
@@ -16,7 +28,12 @@ class UserController extends CommonController{
         $incomelog =M("incomelog")->where(array('id'=>$_GET['id']))->find();
         $state =$incomelog['state']+1;
         M("incomelog")->where(array('commitid'=>$incomelog['commitid']))->save(array('state'=>$state));
-
+        if($state==6){
+           $buyer = M("incomelog")->where(array('commitid'=>$incomelog['commitid'],'orderid'=>2))->find();
+            $userinfo =M("menber")->where(array('uid'=>$buyer['userid']))->find();
+            $left = bcadd($userinfo['chargebag'],$incomelog['income'],2);
+            M("menber")->where(array('uid'=>$buyer['userid']))->save(array('chargebag'=>$left));
+        }
         echo "<script>alert('操作成功');";
         echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
         echo "</script>";
@@ -355,6 +372,16 @@ class UserController extends CommonController{
     public function my(){
         $menber =M("menber");
         $userinfo =$menber->where(array('uid'=>session('uid')))->find();
+        $orderlog = M("orderlog")->where(array('userid'=>session('uid')))->find();
+        if($orderlog['logid']){
+            if($orderlog['states']==1){
+                $msg = "未发货";
+            }else{
+                $msg = "已发货";
+            }
+        }else{
+            $msg = "暂无信息";
+        }
         if($userinfo['fuid']){
             $fid = $menber->where(array('uid'=>$userinfo['fuid']))->find();
             $fuidname = $fid['name'];
@@ -362,6 +389,7 @@ class UserController extends CommonController{
             $fuidname= "暂无";
         }
         $this->assign('fuidname',$fuidname);
+        $this->assign('msg',$msg);
         $this->display();
     }
 
