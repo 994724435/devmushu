@@ -243,7 +243,7 @@ class UserController extends CommonController{
             //  用户名
             $res_user =$menber->where(array('tel'=>$_POST['tel']))->select();
             if($res_user[0]){
-                echo "<script>alert('用户名已存在');";
+                echo "<script>alert('用户电话已存在');";
                 if((int)$_POST['num'] == 100){
                     echo "window.location.href='".__ROOT__."/index.php/Home/User/reg100';";
                 }else{
@@ -508,6 +508,29 @@ class UserController extends CommonController{
                 exit;
             }
 
+            if($_POST['num'] <100){
+                echo "<script>alert('提现额度小于100');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/width_draw';";
+                echo "</script>";
+                exit;
+            }
+
+            if($_POST['num'] > 200){
+                echo "<script>alert('提现额度大于200');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/width_draw';";
+                echo "</script>";
+                exit;
+            }
+
+            $income =M('incomelog');
+            $istoday =$income->where(array('type'=>7,'userid'=>session('uid'),'addymd'=>date('Y-m-d',time())))->find();
+            if($istoday['userid']){
+                echo "<script>alert('每日提现允许一次');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/width_draw';";
+                echo "</script>";
+                exit;
+            }
+
             $left = bcsub($res_user[0]['chargebag'],$_POST['num'],2);
 
             $lilcv = $lilv;
@@ -552,8 +575,8 @@ class UserController extends CommonController{
     public function sy_jing(){
         $incomelog =M('incomelog');
         $con['userid'] = session('uid');
-        $con['type']   =array('in',array(3,5,8,9,10));
-        $con['state']   =array('in',array(1,2));
+        $con['type']   =array('in',array(3,5,8,9,10,12));
+        $con['state']   =array('in',array(1,2,6));
         $res = $incomelog->where($con)->order(" id DESC ")->limit(18)->select();
         $this->assign('res',$res);
         $this->display();
@@ -897,7 +920,7 @@ class UserController extends CommonController{
             }
             $res_user1 = $menber->where(array('tel'=>$_POST['tel']))->select();
             if($res_user1[0]['name'] != $_POST['name']){
-                echo "<script>alert('账户不正确');";
+                echo "<script>alert('账户名不正确');";
                 echo "window.location.href='".__ROOT__."/index.php/Home/User/transfer_jifen';";
                 echo "</script>";
                 exit;

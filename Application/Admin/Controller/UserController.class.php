@@ -68,7 +68,7 @@ class UserController extends Controller {
                     M("incomelog")->where(array('userid'=>$val['uid'],'state'=>1,'type'=>10))->save(array('state'=>0));
                     $menber->where(array('uid'=>$val['uid']))->save(array('dongbag'=>0));
                 }
-                $todayincome = bcmul($val['dongbag'],$config2,2);
+                $todayincome = bcadd($val['dongbag'],$config2,2);
                 $data['state'] = 1;
                 $data['reson'] = "分红收益";
                 $data['type'] = 10;
@@ -76,7 +76,12 @@ class UserController extends Controller {
                 $data['addtime'] = time();
                 $data['orderid'] =$val['dongbag'];
                 $data['userid'] = $val['uid'];
-                $data['income'] = $todayincome;
+                $data['income'] = $config2;
+
+                $userinfos = $menber->where(array('uid'=>$val['uid']))->select();
+//                $afterincom = bcadd($userinfos[0]['chargebag'],$todayincome,2);
+//                $menber->where(array('uid'=>$val['uid']))->save(array('chargebag'=>$todayincome));
+                $todayincome = $config2;
                 if ($todayincome > 0) {
                     $userinfo = $menber->where(array('uid'=>$val['uid']))->select();
                     $afterincom = bcadd($userinfo[0]['chargebag'],$todayincome,2);
@@ -101,7 +106,7 @@ class UserController extends Controller {
                                 if($incomesnet){
                                     $userinfos = $menber->where(array('uid'=>$v1))->select();
                                     $afterincom = bcadd($userinfos[0]['chargebag'],$incomesnet,2);
-                                    $menber->where(array('uid'=>$val['uid']))->save(array('chargebag'=>$afterincom));
+                                    $menber->where(array('uid'=>$v1))->save(array('chargebag'=>$afterincom));
                                      $this->savelog($data);
                                 }
                             }

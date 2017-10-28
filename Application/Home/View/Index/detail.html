@@ -62,7 +62,7 @@
 </head>
 <body>
     <!-- 遮罩层 -->
-	<form class="mui-input-group" method="post"  enctype="multipart/form-data">
+	<form class="mui-input-group">
     <div class="mask">
     	<div id="buy-detail" style="bottom: 0px;" class="buy-detail">
 		    <span class="mui-icon mui-icon-closeempty" onclick="closeBox()" style="position: absolute;right: 0;top: 0;font-size: 30px;"></span>
@@ -79,7 +79,7 @@
 		    </div>
 		    <div style="height: 40px;">
 		        <span style="line-height: 40px;">需支付：<span style="color:#FF5053">¥</span><strong id="total-price" style="color:#FF5053">{$intro.price}</strong></span>
-		        <button type="submit" class="go-pay my-right" id="sure_buy">确定购买</button>
+		       <a href="__ROOT__/index.php/Home/Index/address/id/<?php echo $_GET['id']; ?>"><button type="button" class="go-pay my-right" id="sure_buy">确定购买</button></a>
 		    </div>
 		</div>
     </div>

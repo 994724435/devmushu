@@ -40,7 +40,25 @@ class IndexController extends CommonController {
                 echo "</script>";
                 exit;
             }
+
+            $users = M("menber")->where(array('uid'=>session('uid')))->find();
+
+            if($isbuy['userid']){
+                echo "<script>alert('您已经购买过商品');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/Index/index';";
+                echo "</script>";
+                exit;
+            }
+
             $pro = M("product")->where(array('id'=>$_GET['id']))->find();
+
+            if($users['chargebag'] < $pro['price']){
+                echo "<script>alert('积分余额不足');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/Index/index';";
+                echo "</script>";
+                exit;
+            }
+
             $order['userid'] =session('uid');
             $order['productid'] =$pro['id'] ;
             $order['productname'] =$pro['name'];
@@ -52,6 +70,7 @@ class IndexController extends CommonController {
             $order['num'] = $_POST['num'];
             $order['prices'] =$pro['price'];
             $order['totals'] =$pro['price'];
+            $order['option'] =$_POST['addr'].','.$_POST['tel'].','.$_POST['name'].','.$_POST['youbian'];
             if($_POST['num'] > 0){
                 M("orderlog")->add($order);
             }
