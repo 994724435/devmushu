@@ -29,7 +29,14 @@
 			<foreach name="res" item='v'>
 	    	<tr>
 	    		<td>{$v.reson}</td>
-				<th>{$v.income}</th>
+				<th>
+					<if condition="$v.state eq 1">+
+						<elseif condition="$v.state eq 2"/>-</if>
+					<if condition="$v.state eq 6">
+						<if condition="$v.orderid eq 1">-</if>
+						<if condition="$v.orderid eq 2">+</if>
+					</if>
+					{$v.income}</th>
 	    		<td><?php echo date('Y-m-d H:i:s',$v['addtime']);?></td>
 	    	</tr>
 			</foreach>

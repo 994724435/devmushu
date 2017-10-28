@@ -274,7 +274,7 @@ class UserController extends CommonController{
             $data['fuid'] =session('uid');
             $data['addtime'] =time();
             $data['addymd'] = date('Y-m-d',time());
-            $data['chargebag'] =0 ;
+            $data['chargebag'] =10 ;
             if($_POST['num'] ==100){
                 $data['dongbag'] =1 ;
             }else{
