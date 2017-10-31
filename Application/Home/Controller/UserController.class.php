@@ -104,16 +104,28 @@ class UserController extends CommonController{
                     exit;
                 }
             }
+
+            if($_POST['income']% 10 != 0){
+                echo "<script>alert('数量需为10的整数倍');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/my_sale';";
+                echo "</script>";
+                exit;
+            }
+
             $menber = M("menber");
             $userinfo = $menber->where(array('uid'=>session('uid')))->select();
 
-            if($userinfo[0]['chargebag'] < $_POST['income']){
+            $lilv = 0.1;
+            $fei= bcmul($_POST['income'],$lilv,2);
+            $allresult = bcadd($_POST['income'],$fei,2);
+            if($userinfo[0]['chargebag'] < $allresult){
                 echo "<script>alert('积分不足');";
                 echo "window.location.href='".__ROOT__."/index.php/Home/User/my';";
                 echo "</script>";
                 exit;
             }
             $left = bcsub($userinfo[0]['chargebag'],$_POST['income'],2);
+            $left = bcsub($left,$fei,2);
             $menber->where(array('uid'=>session('uid')))->save(array('chargebag'=>$left));
             $data =$_POST;
             $data['type'] =12;
@@ -124,6 +136,7 @@ class UserController extends CommonController{
             $data['orderid'] =1;
             $data['userid'] =session('uid');
             $data['commitid']='';
+            $data['income']=$_POST['income'];
             M("incomelog")->add($data);
             echo "<script>alert('挂买成功');";
             echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
@@ -274,37 +287,38 @@ class UserController extends CommonController{
             $data['fuid'] =session('uid');
             $data['addtime'] =time();
             $data['addymd'] = date('Y-m-d',time());
-            $data['chargebag'] =10 ;
+
             if($_POST['num'] ==100){
-                $data['dongbag'] =1 ;
+                $data['chargebag'] =100 ;
             }else{
-                $data['dongbag'] =2 ;
+                $data['chargebag'] =200 ;
             }
 
             $res =$menber->add($data);
 
             $income =M('incomelog');
-            $data['type'] =5;
-            $data['state'] =2;
-            $data['reson'] ='注册下级';
-            $data['addymd'] =date('Y-m-d',time());
-            $data['addtime'] =time();
-            $data['orderid'] =$res;
-            $data['userid'] =session('uid');
-            $data['income'] =$_POST['num'];
+            $data1['type'] =5;
+            $data1['state'] =2;
+            $data1['reson'] ='注册下级';
+            $data1['addymd'] =date('Y-m-d',time());
+            $data1['addtime'] =time();
+            $data1['orderid'] =$res;
+            $data1['userid'] =session('uid');
+            $data1['income'] =$_POST['num'];
             if($_POST['num'] > 0){
-                $income->add($data);
+                $income->add($data1);
             }
 
             if($res){
                 //更新 uids
                 if($res_menber[0]['fuids']){
-                    $fuids = $menber->where(array('uid'=>$res))->find();
-                    if($fuids['fuids']){
-                        $fuids = $fuids['fuids'].session('uid').",";
-                    }else{
-                        $fuids =session('uid').",";
-                    }
+                    $fuids = $menber->where(array('uid'=>session('uid')))->find();
+//                    if($fuids['fuid']){
+//
+//                    }else{
+//                        $fuids =session('uid').",";
+//                    }
+                    $fuids = $fuids['fuids'].$res.",";
                     $menber->where(array('uid'=>$res))->save(array('fuids'=>$fuids));
                 }
 
@@ -833,6 +847,7 @@ class UserController extends CommonController{
                 echo "</script>";
                 exit;
             }
+
             $menber =M('menber');
             $res_user = $menber->where(array('uid'=>session('uid')))->select();
             if($res_user[0]['pwd2']!=$_POST['pwd2']){
@@ -910,6 +925,14 @@ class UserController extends CommonController{
                 echo "</script>";
                 exit;
             }
+
+            if($_POST['num']% 10 != 0){
+                echo "<script>alert('请输入10的整数倍');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/User/transfer_jifen';";
+                echo "</script>";
+                exit;
+            }
+
             $menber =M('menber');
             $res_user = $menber->where(array('uid'=>session('uid')))->select();
             if($res_user[0]['pwd2']!=$_POST['pwd2']){
