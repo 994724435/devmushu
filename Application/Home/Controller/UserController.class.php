@@ -25,11 +25,20 @@ class UserController extends CommonController{
             exit;
         }
 
+
         $incomelog =M("incomelog")->where(array('id'=>$_GET['id']))->find();
         $state =$incomelog['state']+1;
         M("incomelog")->where(array('commitid'=>$incomelog['commitid']))->save(array('state'=>$state));
         if($state==6){
            $buyer = M("incomelog")->where(array('commitid'=>$incomelog['commitid'],'orderid'=>2))->find();
+           //查询用户id上线
+           if($this->isshang($buyer['userid'])){
+               M("incomelog")->where(array('commitid'=>$incomelog['commitid']))->save(array('state'=>5));
+               echo "<script>alert('买家收益今天已达上限');";
+               echo "window.location.href='".__ROOT__."/index.php/Home/User/sale_list';";
+               echo "</script>";
+               exit;
+           }
             $userinfo =M("menber")->where(array('uid'=>$buyer['userid']))->find();
             $left = bcadd($userinfo['chargebag'],$incomelog['income'],2);
             M("menber")->where(array('uid'=>$buyer['userid']))->save(array('chargebag'=>$left));
@@ -589,11 +598,27 @@ class UserController extends CommonController{
     public function sy_jing(){
         $incomelog =M('incomelog');
         $con['userid'] = session('uid');
-        $con['type']   =array('in',array(3,5,8,9,10,12));
+        $con['type']   =array('in',array(3,5,7,8,9,10,12));
         $con['state']   =array('in',array(1,2,6));
         $res = $incomelog->where($con)->order(" id DESC ")->limit(18)->select();
         $this->assign('res',$res);
         $this->display();
+    }
+
+
+    /**
+     * @return int 1大于  0小于 没有到上限
+     * 每日收益上限
+     */
+    public function isshang($uid){
+        // 查询今日收益上线
+        $todayincomeall = M("incomelog")->where(array('userid'=>$uid,'state'=>1,'addymd'=>date('Y-m-d',time())))->sum('income');
+        $config= M("Config")->where(array('id'=>13))->find();
+        if($todayincomeall > $config['value']){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 
     /*

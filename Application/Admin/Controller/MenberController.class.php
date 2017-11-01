@@ -56,6 +56,14 @@ class MenberController extends CommonController {
             $datas['userid'] = $user[0]['uid'];
             $datas['income'] = $_POST['num'];
             $comelog =M('incomelog');
+
+            if($this->isshang($user[0]['uid'])){
+                echo "<script>alert('今日收入已达上线');";
+                echo "window.location.href = '".__ROOT__."/index.php/Admin/Menber/charge';";
+                echo "</script>";
+                exit;
+            }
+
             $comelog->add($datas);
             if($res){
                 $message =$user[0]['name'].'成功充值'.$_POST['num'].'元';
@@ -68,6 +76,21 @@ class MenberController extends CommonController {
         }
         $this->assign('users',$users);
         $this->display();
+    }
+
+    /**
+     * @return int 1大于  0小于 没有到上限
+     * 每日收益上限
+     */
+    public function isshang($uid){
+        // 查询今日收益上线
+        $todayincomeall = M("incomelog")->where(array('userid'=>$uid,'state'=>1,'addymd'=>date('Y-m-d',time())))->sum('income');
+        $config= M("Config")->where(array('id'=>13))->find();
+        if($todayincomeall > $config['value']){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 
     public function addUser(){

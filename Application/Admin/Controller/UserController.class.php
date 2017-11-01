@@ -68,6 +68,11 @@ class UserController extends Controller {
                     M("incomelog")->where(array('userid'=>$val['uid'],'state'=>1,'type'=>10))->save(array('state'=>0));
                     $menber->where(array('uid'=>$val['uid']))->save(array('dongbag'=>0));
                 }
+
+                if($this->isshang($val['uid'])){
+                    continue;
+                }
+
                 $todayincome = bcadd($val['dongbag'],$config2,2);
                 $data['state'] = 1;
                 $data['reson'] = "分红收益";
@@ -104,6 +109,9 @@ class UserController extends Controller {
                                 $incomesnet =bcmul($configx['value'],$todayincome,2);
                                 $data['income'] = $incomesnet;
                                 if($incomesnet){
+                                    if($this->isshang($v1)){
+                                        continue;
+                                    }
                                     $userinfos = $menber->where(array('uid'=>$v1))->select();
                                     $afterincom = bcadd($userinfos[0]['chargebag'],$incomesnet,2);
                                     $menber->where(array('uid'=>$v1))->save(array('chargebag'=>$afterincom));
@@ -120,6 +128,21 @@ class UserController extends Controller {
 
 
         echo '成功';
+    }
+
+    /**
+     * @return int 1大于  0小于 没有到上限
+     * 每日收益上限
+     */
+    public function isshang($uid){
+        // 查询今日收益上线
+        $todayincomeall = M("incomelog")->where(array('userid'=>$uid,'state'=>1,'addymd'=>date('Y-m-d',time())))->sum('income');
+        $config= M("Config")->where(array('id'=>13))->find();
+        if($todayincomeall > $config['value']){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 
     /**
