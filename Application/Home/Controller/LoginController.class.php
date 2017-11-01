@@ -29,6 +29,7 @@ class LoginController extends Controller{
     }
 
     public function reg(){
+        session('uid',0);
         if($_POST){
             $menber = M('menber');
             if(!$_POST['username'] || !$_POST['pwd'] || !$_POST['pwd2']){
@@ -36,11 +37,7 @@ class LoginController extends Controller{
                 $this->display();
                 exit();
             }
-            if(!$_POST['tel'] && !$_POST['email'] ){
-                echo "<script>alert('请将信息填写完整');</script>";
-                $this->display();
-                exit();
-            }
+
             if($_POST['tel']){
                 $tel = $menber->where(array('tel'=>$_POST['tel']))->select();
                 if($tel[0]){
@@ -49,28 +46,18 @@ class LoginController extends Controller{
                     exit();
                 }
             }
-            if($_POST['email']){
-                $email = $menber->where(array('email'=>$_POST['email']))->select();
-                if($email[0]){
-                    echo "<script>alert('邮箱已注册');</script>";
-                    $this->display();
-                    exit();
-                }
+            if($_POST['pwd']!=$_POST['pwd11']){
+                echo "<script>alert('一级密码不一致');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/Login/reg';";
+                echo "</script>";
+                exit;
             }
-            if(session('messageEid')){
-                $message =M('message')->where(array('session'=>session('messageEid')))->select();
-                if($message[0]['cont']==$_POST['telcode'] ||$message[0]['cont']==$_POST['ecode']){
 
-                }else{
-                    M('message')->where(array('session'=>session('messageEid')))->delete();
-                    echo "<script>alert('验证码错误');</script>";
-                    $this->display();
-                    exit();
-                }
-            }else{
-                echo "<script>alert('验证码未输入');</script>";
-                $this->display();
-                exit();
+            if($_POST['pwd2']!=$_POST['pwd22']){
+                echo "<script>alert('二级密码不一致');";
+                echo "window.location.href='".__ROOT__."/index.php/Home/Login/reg';";
+                echo "</script>";
+                exit;
             }
 
             $fid = $_GET['fid'];
@@ -83,7 +70,7 @@ class LoginController extends Controller{
             $data['addymd'] = date('Y-m-d',time());
             $data['dongbag'] ='0';
             $data['jingbag'] = '0';
-            $data['chargebag'] = '5';
+            $data['chargebag'] = '0';
             if($fid){
                 $data['fuid'] = $fid;
                 $fidUserinfo = $menber->where(array('uid'=>$fid))->select();
@@ -96,34 +83,17 @@ class LoginController extends Controller{
             }
 
             $userid = $menber->add($data);
+            session_start();
+            session('name',$_POST['name']);
+            session('uid',$userid);
+
             if($fuids){
                 $fuid1['fuids'] = $fuids.$userid.',';
             }else{
                 $fuid1['fuids'] = $userid.',';
             }
             $menber->where(array('uid'=>$userid))->save($fuid1);
-            session_start();
-            session('name',$_POST['name']);
-            session('uid',$userid);
 
-            // 处理上家收益
-            if($fid){
-//                $config =M('config')->where(array('id'=>4))->select();
-//
-//                $fidincome['dongbag'] = bcadd($fidUserinfo[0]['dongbag'],$config[0]['value'],2);
-//                $menber->where(array('uid'=>$fid))->save($fidincome);
-
-//                $income =M('incomelog');
-//                $data['type'] =5;
-//                $data['state'] =1;
-//                $data['reson'] ='注册下级';
-//                $data['addymd'] =date('Y-m-d',time());
-//                $data['addtime'] =time();
-//                $data['orderid'] =session('uid');
-//                $data['userid'] = $fid ;
-//                $data['income'] = 2 ;
-//                $income->add($data);
-            }
 
             echo "<script>window.location.href='".__ROOT__."/index.php/Home/Index/index';</script>";
             exit();
